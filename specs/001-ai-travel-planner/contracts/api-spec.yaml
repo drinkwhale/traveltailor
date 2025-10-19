@@ -1,0 +1,1109 @@
+openapi: 3.0.3
+info:
+  title: AI TripSmith API
+  description: |
+    REST API for AI-powered travel itinerary planning service.
+
+    **Features**:
+    - AI-generated travel plans based on user preferences
+    - Map visualization and route export
+    - PDF itinerary generation
+    - Flight and accommodation recommendations
+    - User preference learning
+
+  version: 1.0.0
+  contact:
+    name: AI TripSmith Support
+    email: support@tripsmith.com
+
+servers:
+  - url: https://api.tripsmith.com/v1
+    description: Production server
+  - url: https://staging-api.tripsmith.com/v1
+    description: Staging server
+  - url: http://localhost:8000/v1
+    description: Local development server
+
+tags:
+  - name: auth
+    description: Authentication and user management
+  - name: travel-plans
+    description: Travel plan creation and management
+  - name: places
+    description: Place search and recommendations
+  - name: exports
+    description: Export functionality (PDF, maps)
+  - name: recommendations
+    description: Flight and accommodation recommendations
+  - name: preferences
+    description: User preference management
+
+paths:
+  # ============================================================
+  # Authentication Endpoints
+  # ============================================================
+
+  /auth/register:
+    post:
+      tags: [auth]
+      summary: Register a new user
+      operationId: registerUser
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [email, password]
+              properties:
+                email:
+                  type: string
+                  format: email
+                  example: user@example.com
+                password:
+                  type: string
+                  format: password
+                  minLength: 8
+                  example: SecurePass123!
+                full_name:
+                  type: string
+                  example: John Doe
+      responses:
+        '201':
+          description: User successfully registered
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '409':
+          description: Email already exists
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /auth/login:
+    post:
+      tags: [auth]
+      summary: Login user
+      operationId: loginUser
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [email, password]
+              properties:
+                email:
+                  type: string
+                  format: email
+                password:
+                  type: string
+                  format: password
+      responses:
+        '200':
+          description: Login successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  access_token:
+                    type: string
+                    description: JWT access token
+                  token_type:
+                    type: string
+                    example: Bearer
+                  user:
+                    $ref: '#/components/schemas/UserResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  /auth/me:
+    get:
+      tags: [auth]
+      summary: Get current user profile
+      operationId: getCurrentUser
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: User profile retrieved
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  # ============================================================
+  # Travel Plans Endpoints
+  # ============================================================
+
+  /travel-plans:
+    get:
+      tags: [travel-plans]
+      summary: List user's travel plans
+      operationId: listTravelPlans
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: status
+          in: query
+          schema:
+            type: string
+            enum: [draft, completed, archived]
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 20
+            maximum: 100
+        - name: offset
+          in: query
+          schema:
+            type: integer
+            default: 0
+      responses:
+        '200':
+          description: Travel plans retrieved
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  items:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/TravelPlanSummary'
+                  total:
+                    type: integer
+                  limit:
+                    type: integer
+                  offset:
+                    type: integer
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+    post:
+      tags: [travel-plans]
+      summary: Create a new travel plan (AI generation)
+      operationId: createTravelPlan
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TravelPlanCreateRequest'
+      responses:
+        '202':
+          description: Plan generation started (async)
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  plan_id:
+                    type: string
+                    format: uuid
+                  status:
+                    type: string
+                    example: generating
+                  estimated_seconds:
+                    type: integer
+                    example: 30
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '429':
+          description: Rate limit exceeded
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /travel-plans/{planId}:
+    get:
+      tags: [travel-plans]
+      summary: Get travel plan details
+      operationId: getTravelPlan
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/PlanId'
+      responses:
+        '200':
+          description: Travel plan retrieved
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TravelPlanDetail'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+    patch:
+      tags: [travel-plans]
+      summary: Update travel plan
+      operationId: updateTravelPlan
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/PlanId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                status:
+                  type: string
+                  enum: [draft, completed, archived]
+      responses:
+        '200':
+          description: Travel plan updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TravelPlanDetail'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+    delete:
+      tags: [travel-plans]
+      summary: Delete travel plan
+      operationId: deleteTravelPlan
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/PlanId'
+      responses:
+        '204':
+          description: Travel plan deleted
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /travel-plans/{planId}/status:
+    get:
+      tags: [travel-plans]
+      summary: Get plan generation status (for async operations)
+      operationId: getTravelPlanStatus
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/PlanId'
+      responses:
+        '200':
+          description: Generation status retrieved
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  plan_id:
+                    type: string
+                    format: uuid
+                  status:
+                    type: string
+                    enum: [generating, completed, failed]
+                  progress_percentage:
+                    type: integer
+                    minimum: 0
+                    maximum: 100
+                  current_step:
+                    type: string
+                    example: "Generating daily itineraries"
+                  error_message:
+                    type: string
+                    nullable: true
+
+  # ============================================================
+  # Places Endpoints
+  # ============================================================
+
+  /places/search:
+    get:
+      tags: [places]
+      summary: Search for places
+      operationId: searchPlaces
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: query
+          in: query
+          required: true
+          schema:
+            type: string
+          example: "Tokyo restaurants"
+        - name: category
+          in: query
+          schema:
+            type: string
+            enum: [accommodation, restaurant, cafe, attraction, shopping, transport]
+        - name: latitude
+          in: query
+          schema:
+            type: number
+            format: double
+        - name: longitude
+          in: query
+          schema:
+            type: number
+            format: double
+        - name: radius_meters
+          in: query
+          schema:
+            type: integer
+            default: 5000
+      responses:
+        '200':
+          description: Places found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  places:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Place'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+
+  /places/{placeId}:
+    get:
+      tags: [places]
+      summary: Get place details
+      operationId: getPlaceDetails
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: placeId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Place details retrieved
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PlaceDetail'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  # ============================================================
+  # Exports Endpoints
+  # ============================================================
+
+  /exports/pdf/{planId}:
+    get:
+      tags: [exports]
+      summary: Generate and download travel plan PDF
+      operationId: generatePDF
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/PlanId'
+      responses:
+        '200':
+          description: PDF file
+          content:
+            application/pdf:
+              schema:
+                type: string
+                format: binary
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /exports/map/{planId}:
+    get:
+      tags: [exports]
+      summary: Get map export URLs (Kakao/Google Maps)
+      operationId: getMapExportUrls
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/PlanId'
+        - name: day
+          in: query
+          description: Export specific day (optional, defaults to all days)
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Map URLs generated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  kakao_map_url:
+                    type: string
+                    format: uri
+                    example: "https://map.kakao.com/link/map/..."
+                  google_maps_url:
+                    type: string
+                    format: uri
+                    example: "https://www.google.com/maps/dir/?api=1&waypoints=..."
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  # ============================================================
+  # Recommendations Endpoints
+  # ============================================================
+
+  /recommendations/flights/{planId}:
+    get:
+      tags: [recommendations]
+      summary: Get flight recommendations for travel plan
+      operationId: getFlightRecommendations
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/PlanId'
+      responses:
+        '200':
+          description: Flight options retrieved
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  outbound_flights:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/FlightOption'
+                  return_flights:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/FlightOption'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /recommendations/accommodations/{planId}:
+    get:
+      tags: [recommendations]
+      summary: Get accommodation recommendations
+      operationId: getAccommodationRecommendations
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/PlanId'
+      responses:
+        '200':
+          description: Accommodation options retrieved
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  accommodations:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/AccommodationOption'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  # ============================================================
+  # Preferences Endpoints
+  # ============================================================
+
+  /preferences:
+    get:
+      tags: [preferences]
+      summary: Get user preferences
+      operationId: getUserPreferences
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Preferences retrieved
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserPreference'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+    put:
+      tags: [preferences]
+      summary: Update user preferences
+      operationId: updateUserPreferences
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserPreferenceUpdate'
+      responses:
+        '200':
+          description: Preferences updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserPreference'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+# ============================================================
+# Components
+# ============================================================
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  parameters:
+    PlanId:
+      name: planId
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+      description: Travel plan unique identifier
+
+  schemas:
+    # --------------------------------------------------------
+    # User Schemas
+    # --------------------------------------------------------
+
+    UserResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        email:
+          type: string
+          format: email
+        full_name:
+          type: string
+          nullable: true
+        subscription_tier:
+          type: string
+          enum: [free, premium]
+        created_at:
+          type: string
+          format: date-time
+
+    # --------------------------------------------------------
+    # Travel Plan Schemas
+    # --------------------------------------------------------
+
+    TravelPlanCreateRequest:
+      type: object
+      required:
+        - destination
+        - start_date
+        - end_date
+        - budget_total
+        - traveler_type
+        - preferences
+      properties:
+        destination:
+          type: string
+          example: "Tokyo"
+        country:
+          type: string
+          example: "Japan"
+        start_date:
+          type: string
+          format: date
+          example: "2025-11-01"
+        end_date:
+          type: string
+          format: date
+          example: "2025-11-04"
+        budget_total:
+          type: integer
+          description: Total budget in KRW
+          example: 800000
+        traveler_type:
+          type: string
+          enum: [couple, family, solo, friends]
+          example: "couple"
+        traveler_count:
+          type: integer
+          minimum: 1
+          default: 1
+          example: 2
+        preferences:
+          type: object
+          properties:
+            interests:
+              type: array
+              items:
+                type: string
+                enum: [food, sightseeing, relaxation, culture, adventure, shopping, nightlife]
+              example: ["food", "sightseeing"]
+            dietary_restrictions:
+              type: array
+              items:
+                type: string
+              example: ["vegetarian"]
+            mobility_considerations:
+              type: string
+              nullable: true
+
+    TravelPlanSummary:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        title:
+          type: string
+        destination:
+          type: string
+        start_date:
+          type: string
+          format: date
+        end_date:
+          type: string
+          format: date
+        total_days:
+          type: integer
+        budget_total:
+          type: integer
+        status:
+          type: string
+          enum: [draft, completed, archived]
+        created_at:
+          type: string
+          format: date-time
+
+    TravelPlanDetail:
+      allOf:
+        - $ref: '#/components/schemas/TravelPlanSummary'
+        - type: object
+          properties:
+            country:
+              type: string
+            total_nights:
+              type: integer
+            budget_allocated:
+              type: integer
+            budget_breakdown:
+              type: object
+              properties:
+                accommodation:
+                  type: integer
+                food:
+                  type: integer
+                activities:
+                  type: integer
+                transport:
+                  type: integer
+            traveler_type:
+              type: string
+            traveler_count:
+              type: integer
+            preferences:
+              type: object
+            daily_itineraries:
+              type: array
+              items:
+                $ref: '#/components/schemas/DailyItinerary'
+
+    DailyItinerary:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        date:
+          type: string
+          format: date
+        day_number:
+          type: integer
+        theme:
+          type: string
+          nullable: true
+        notes:
+          type: string
+          nullable: true
+        places:
+          type: array
+          items:
+            $ref: '#/components/schemas/ItineraryPlace'
+        routes:
+          type: array
+          items:
+            $ref: '#/components/schemas/Route'
+
+    ItineraryPlace:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        place:
+          $ref: '#/components/schemas/Place'
+        visit_order:
+          type: integer
+        visit_time:
+          type: string
+          format: time
+          nullable: true
+        duration_minutes:
+          type: integer
+          nullable: true
+        visit_type:
+          type: string
+          enum: [overnight, meal, activity, transit]
+        estimated_cost:
+          type: integer
+          nullable: true
+        ai_recommendation_reason:
+          type: string
+          nullable: true
+        user_notes:
+          type: string
+          nullable: true
+
+    # --------------------------------------------------------
+    # Place Schemas
+    # --------------------------------------------------------
+
+    Place:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        category:
+          type: string
+          enum: [accommodation, restaurant, cafe, attraction, shopping, transport]
+        subcategory:
+          type: string
+          nullable: true
+        address:
+          type: string
+          nullable: true
+        latitude:
+          type: number
+          format: double
+        longitude:
+          type: number
+          format: double
+        rating:
+          type: number
+          format: float
+          minimum: 0
+          maximum: 5
+          nullable: true
+        price_level:
+          type: integer
+          minimum: 1
+          maximum: 4
+          nullable: true
+        photos:
+          type: array
+          items:
+            type: string
+            format: uri
+
+    PlaceDetail:
+      allOf:
+        - $ref: '#/components/schemas/Place'
+        - type: object
+          properties:
+            phone:
+              type: string
+              nullable: true
+            website:
+              type: string
+              format: uri
+              nullable: true
+            opening_hours:
+              type: object
+              nullable: true
+            description:
+              type: string
+              nullable: true
+            tags:
+              type: array
+              items:
+                type: string
+
+    # --------------------------------------------------------
+    # Route Schema
+    # --------------------------------------------------------
+
+    Route:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        from_place:
+          $ref: '#/components/schemas/Place'
+        to_place:
+          $ref: '#/components/schemas/Place'
+        transport_mode:
+          type: string
+          enum: [walking, driving, public_transit, taxi, bicycle]
+        distance_meters:
+          type: integer
+          nullable: true
+        duration_minutes:
+          type: integer
+          nullable: true
+        estimated_cost:
+          type: integer
+          nullable: true
+        route_polyline:
+          type: string
+          description: Encoded polyline for map display
+          nullable: true
+
+    # --------------------------------------------------------
+    # Recommendation Schemas
+    # --------------------------------------------------------
+
+    FlightOption:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        flight_type:
+          type: string
+          enum: [outbound, return]
+        airline:
+          type: string
+        flight_number:
+          type: string
+          nullable: true
+        departure_airport:
+          type: string
+          description: IATA code
+        arrival_airport:
+          type: string
+          description: IATA code
+        departure_time:
+          type: string
+          format: date-time
+        arrival_time:
+          type: string
+          format: date-time
+        duration_minutes:
+          type: integer
+        stops:
+          type: integer
+        price_krw:
+          type: integer
+        booking_url:
+          type: string
+          format: uri
+
+    AccommodationOption:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        type:
+          type: string
+          enum: [hotel, hostel, resort, guesthouse, vacation_rental]
+        address:
+          type: string
+        latitude:
+          type: number
+          format: double
+        longitude:
+          type: number
+          format: double
+        rating:
+          type: number
+          format: float
+          minimum: 0
+          maximum: 5
+        review_count:
+          type: integer
+        price_per_night_krw:
+          type: integer
+        total_price_krw:
+          type: integer
+        check_in_date:
+          type: string
+          format: date
+        check_out_date:
+          type: string
+          format: date
+        nights:
+          type: integer
+        amenities:
+          type: array
+          items:
+            type: string
+        photos:
+          type: array
+          items:
+            type: string
+            format: uri
+        booking_url:
+          type: string
+          format: uri
+
+    # --------------------------------------------------------
+    # Preference Schema
+    # --------------------------------------------------------
+
+    UserPreference:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        default_budget_min:
+          type: integer
+          nullable: true
+        default_budget_max:
+          type: integer
+          nullable: true
+        preferred_traveler_types:
+          type: array
+          items:
+            type: string
+            enum: [couple, family, solo, friends]
+        preferred_interests:
+          type: array
+          items:
+            type: string
+            enum: [food, sightseeing, relaxation, culture, adventure, shopping, nightlife]
+        avoided_activities:
+          type: array
+          items:
+            type: string
+        dietary_restrictions:
+          type: array
+          items:
+            type: string
+        mobility_considerations:
+          type: string
+          nullable: true
+        preferred_accommodation_type:
+          type: array
+          items:
+            type: string
+
+    UserPreferenceUpdate:
+      type: object
+      properties:
+        default_budget_min:
+          type: integer
+          nullable: true
+        default_budget_max:
+          type: integer
+          nullable: true
+        preferred_traveler_types:
+          type: array
+          items:
+            type: string
+        preferred_interests:
+          type: array
+          items:
+            type: string
+        avoided_activities:
+          type: array
+          items:
+            type: string
+        dietary_restrictions:
+          type: array
+          items:
+            type: string
+        mobility_considerations:
+          type: string
+          nullable: true
+        preferred_accommodation_type:
+          type: array
+          items:
+            type: string
+
+    # --------------------------------------------------------
+    # Error Schemas
+    # --------------------------------------------------------
+
+    Error:
+      type: object
+      properties:
+        error:
+          type: string
+          description: Error code
+        message:
+          type: string
+          description: Human-readable error message
+        details:
+          type: object
+          nullable: true
+          description: Additional error details
+
+  responses:
+    BadRequest:
+      description: Bad request - validation error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error: VALIDATION_ERROR
+            message: "Invalid input data"
+            details:
+              field: "start_date"
+              reason: "Must be a future date"
+
+    Unauthorized:
+      description: Unauthorized - missing or invalid authentication
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error: UNAUTHORIZED
+            message: "Authentication required"
+
+    NotFound:
+      description: Resource not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error: NOT_FOUND
+            message: "Travel plan not found"

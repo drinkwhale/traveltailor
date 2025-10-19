@@ -1,0 +1,267 @@
+# ===================================
+# AI TripTailor Project - .gitignore
+# ===================================
+
+# ====================
+# Operating System
+# ====================
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+*.swp
+*.swo
+*~
+
+# ====================
+# IDE / Editors
+# ====================
+# VSCode
+.vscode/
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+
+# JetBrains IDEs
+.idea/
+*.iml
+*.iws
+*.ipr
+.idea_modules/
+
+# Sublime Text
+*.sublime-workspace
+*.sublime-project
+
+# Vim
+*.swp
+*.swo
+
+# ====================
+# Claude Code
+# ====================
+.claude/settings.local.json
+.claude/.chat_history/
+.claude/temp/
+
+# ====================
+# Node.js / Frontend
+# ====================
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# Build outputs
+dist/
+build/
+out/
+.next/
+.nuxt/
+.cache/
+
+# Testing
+coverage/
+*.lcov
+.nyc_output
+
+# Environment files
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# TypeScript
+*.tsbuildinfo
+.tscache/
+
+# ====================
+# Python / Backend
+# ====================
+# Byte-compiled / optimized
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# Distribution / packaging
+.Python
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+pip-log.txt
+pip-delete-this-directory.txt
+*.egg
+*.egg-info/
+dist/
+build/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+share/python-wheels/
+*.manifest
+*.spec
+
+# Virtual environments
+.venv
+virtualenv/
+.conda/
+
+# Poetry
+poetry.lock
+.poetry/
+
+# Pytest
+.pytest_cache/
+.coverage
+htmlcov/
+*.cover
+.hypothesis/
+
+# Flask
+instance/
+.webassets-cache
+
+# FastAPI
+*.db
+*.sqlite
+*.sqlite3
+
+# ====================
+# Database
+# ====================
+*.db
+*.sqlite
+*.sqlite3
+*.sql
+db.json
+database.json
+
+# Supabase local
+.supabase/
+
+# PostgreSQL
+*.pgsql
+*.dump
+
+# ====================
+# API Keys & Secrets
+# ====================
+.env
+.env.*
+!.env.example
+secrets.json
+credentials.json
+config/secrets.yaml
+config/credentials.yaml
+*.pem
+*.key
+*.cert
+
+# ====================
+# Logs
+# ====================
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# ====================
+# AI & ML
+# ====================
+# Model files
+*.h5
+*.pkl
+*.pickle
+*.pt
+*.pth
+*.ckpt
+models/
+checkpoints/
+
+# Data files
+data/
+datasets/
+*.csv
+*.json
+!package.json
+!tsconfig.json
+!next.config.json
+
+# ====================
+# Generated Files
+# ====================
+# PDF outputs
+*.pdf
+!docs/*.pdf
+generated/
+output/
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+*.temp
+
+# ====================
+# Cloud & Deployment
+# ====================
+# Vercel
+.vercel
+.vercel.json
+
+# AWS
+.aws/
+.elasticbeanstalk/
+
+# Docker
+docker-compose.override.yml
+.dockerignore
+
+# Terraform
+*.tfstate
+*.tfstate.*
+.terraform/
+
+# ====================
+# Testing & CI/CD
+# ====================
+.coverage
+.pytest_cache/
+.tox/
+.nox/
+htmlcov/
+coverage/
+
+# ====================
+# Misc
+# ====================
+# Backup files
+*.bak
+*.backup
+*~
+
+# Lock files (optional - uncomment if needed)
+# package-lock.json
+# yarn.lock
+# pnpm-lock.yaml
+
+# Specify framework
+.specify/temp/
+.specify/cache/
