@@ -72,6 +72,18 @@
 - [x] T030 [P] OpenAI/LangChain 클라이언트 기본 구조 in backend/src/services/ai/__init__.py
 - [x] T031 [P] Mapbox 설정 in frontend/src/lib/mapbox.ts
 
+### AI/ML 인프라 (아키텍처 분석 보고서 기반 추가)
+
+- [ ] T031a [P] OpenAI API 타임아웃 및 Retry 로직 구현 (tenacity, 60초 타임아웃) in backend/src/integrations/openai_client.py
+- [ ] T031b [P] AI Fallback 메커니즘 (규칙 기반 백업 시스템) in backend/src/services/ai/fallback.py
+- [ ] T031c [P] AI 비용 추적 미들웨어 (일일 예산 $50 제한) in backend/src/middleware/cost_tracking.py
+
+### 보안 기초 설정 (아키텍처 분석 보고서 기반 추가)
+
+- [ ] T032a [P] 보안 헤더 미들웨어 (CSP, X-XSS-Protection, HSTS) in backend/src/middleware/security_headers.py
+- [ ] T032b [P] CSRF 보호 설정 (fastapi-csrf-protect) in backend/src/core/csrf.py
+- [ ] T032c [P] DOMPurify 설정 (XSS 방어) in frontend/src/lib/sanitize.ts
+
 **체크포인트**: 기반 인프라 완료 - 이제 사용자 스토리 병렬 작업 시작 가능
 
 ---
@@ -102,14 +114,15 @@
 
 ### AI 여행 계획 서비스 (US1 핵심 로직)
 
-- [ ] T042 [US1] LangChain 프롬프트 템플릿 설계 in backend/src/services/ai/prompts.py
+- [ ] T042 [US1] LangChain 프롬프트 템플릿 설계 (토큰 최적화) in backend/src/services/ai/prompts.py
 - [ ] T043 [US1] 사용자 입력 분석 서비스 (선호도 추출) in backend/src/services/ai/preference_analyzer.py
 - [ ] T044 [US1] 예산 할당 로직 (숙박/식사/관광/교통) in backend/src/services/ai/budget_allocator.py
 - [ ] T045 [US1] Google Places API 장소 검색 서비스 in backend/src/integrations/google_maps.py (검색, 상세 조회)
 - [ ] T046 [US1] AI 장소 추천 및 랭킹 로직 in backend/src/services/places/recommender.py
 - [ ] T047 [US1] 경로 최적화 서비스 (방문 순서 계산) in backend/src/services/routes/optimizer.py
 - [ ] T048 [US1] 시간대별 일정 생성 서비스 in backend/src/services/ai/timeline_generator.py
-- [ ] T049 [US1] 통합 여행 계획 생성 서비스 in backend/src/services/ai/planner.py (T042~T048 통합)
+- [ ] T049a [US1] AI 응답 캐싱 서비스 (Redis 기반, SHA256 해싱, 7일 TTL, 30-40% 비용 절감) in backend/src/services/ai/cache.py
+- [ ] T049 [US1] 통합 여행 계획 생성 서비스 in backend/src/services/ai/planner.py (T042~T049a 통합)
 
 ### API 엔드포인트 (US1)
 
@@ -303,15 +316,20 @@
 ### 성능 최적화
 
 - [ ] T123 [P] Redis 캐싱 설정 (장소 데이터, 항공편 가격) in backend/src/core/cache.py
-- [ ] T124 [P] 데이터베이스 쿼리 최적화 (인덱스 추가, N+1 문제 해결)
+- [ ] T123a [P] 공간 인덱스 (PostGIS GIST) 마이그레이션 (33배 성능 향상) in backend/alembic/versions/xxx_spatial_index.py
+- [ ] T123b [P] 위치 기반 쿼리 최적화 (ST_DWithin, 거리순 정렬) in backend/src/services/places/geo_search.py
+- [ ] T124 [P] 데이터베이스 쿼리 최적화 (인덱스 추가, N+1 문제 해결 - selectinload/joinedload)
+- [ ] T124a [P] 계산된 필드를 @property로 리팩토링 (total_days, total_nights) in backend/src/models/travel_plan.py
 - [ ] T125 [P] 프론트엔드 번들 크기 최적화 (코드 스플리팅, 레이지 로딩)
 - [ ] T126 API 응답 시간 모니터링 및 최적화 (<200ms 목표)
 
 ### 보안 강화
 
-- [ ] T127 [P] Rate limiting 구현 (사용자당 일일 생성 제한) in backend/src/api/dependencies.py
-- [ ] T128 [P] 입력 sanitization 및 SQL injection 방어
-- [ ] T129 CORS 설정 검토 및 강화 in backend/src/main.py
+- [ ] T127 [P] Rate limiting 구현 (slowapi, 로그인/회원가입 5/min, API 제한) in backend/src/api/dependencies.py
+- [ ] T128 [P] 입력 sanitization (Pydantic validator 강화, 악의적 패턴 필터링) in backend/src/schemas/
+- [ ] T128a [P] XSS 방어 강화 (보안 헤더 업데이트, DOMPurify 통합) in backend/src/middleware/security_headers.py, frontend/src/lib/sanitize.ts
+- [ ] T128b [P] CSRF 토큰 검증 (POST/PUT/DELETE 엔드포인트) in backend/src/core/csrf.py
+- [ ] T129 CORS 설정 검토 및 강화 (와일드카드(*) 제거 확인) in backend/src/main.py
 
 ### 모니터링 및 로깅
 
@@ -332,13 +350,25 @@
 - [ ] T138 [P] 프론트엔드 E2E 테스트 작성 (Playwright) - 여행 생성 플로우
 - [ ] T139 외부 API 모킹 및 계약 테스트
 
+### 모바일 오프라인 지원 (아키텍처 분석 보고서 기반 추가)
+
+- [ ] T145 [P] Service Worker 캐싱 전략 (Cache First, Network First, Stale-While-Revalidate) in frontend/public/sw.js
+- [ ] T146 [P] IndexedDB 오프라인 스토리지 및 동기화 큐 in frontend/src/lib/offline-storage.ts
+- [ ] T147 [P] 네트워크 상태 감지 훅 (자동 동기화) in frontend/src/hooks/useNetworkStatus.ts
+- [ ] T148 [P] 지도 타일 오프라인 캐싱 (50MB 제한) in frontend/src/lib/map-offline.ts
+
+### 토큰 저장 하이브리드 전략 (아키텍처 분석 보고서 기반 추가)
+
+- [ ] T149 [P] 플랫폼별 토큰 스토리지 (웹: httpOnly, PWA: 암호화, Capacitor: Native) in frontend/src/lib/token-storage.ts
+- [ ] T150 쿠키 기반 인증 백엔드 지원 (웹용 httpOnly 쿠키) in backend/src/api/v1/auth.py (업데이트)
+
 ### 배포 준비
 
-- [ ] T140 환경 변수 검토 (프로덕션 설정)
-- [ ] T141 [P] Vercel 배포 설정 (프론트엔드)
-- [ ] T142 [P] Railway/Render 배포 설정 (백엔드)
-- [ ] T143 데이터베이스 마이그레이션 프로덕션 실행
-- [ ] T144 CI/CD 파이프라인 설정 (GitHub Actions)
+- [ ] T151 환경 변수 검토 (프로덕션 설정)
+- [ ] T152 [P] Vercel 배포 설정 (프론트엔드)
+- [ ] T153 [P] Railway/Render 배포 설정 (백엔드)
+- [ ] T154 데이터베이스 마이그레이션 프로덕션 실행
+- [ ] T155 CI/CD 파이프라인 설정 (GitHub Actions)
 
 ---
 
@@ -436,19 +466,27 @@ Task T065: 예산 요약 컴포넌트
 
 ## 작업 통계
 
-- **총 작업 수**: 144개
+- **총 작업 수**: 161개 (기존 144개 + 신규 17개)
 - **User Story별 작업 수**:
   - Phase 1 (프로젝트 초기 설정): 8개
-  - Phase 2 (기반 인프라): 23개
-  - User Story 1 (P1 - AI 여행 일정 생성): 38개
+  - Phase 2 (기반 인프라): 29개 (+6개: AI/ML 인프라 3개, 보안 기초 3개)
+  - User Story 1 (P1 - AI 여행 일정 생성): 39개 (+1개: AI 캐싱)
   - User Story 2 (P2 - 지도 시각화): 14개
   - User Story 3 (P2 - PDF 생성): 11개
   - User Story 4 (P3 - 예약 링크): 17개
   - User Story 5 (P3 - 선호도 학습): 11개
-  - Phase 8 (성능 최적화 및 마무리): 22개
+  - Phase 8 (성능 최적화 및 마무리): 32개 (+10개: 성능 3개, 보안 3개, 모바일 4개)
 
-- **병렬 실행 가능 작업**: 약 60개 (전체의 42%)
-- **MVP 범위 (US1만)**: Phase 1 + Phase 2 + Phase 3 = 69개 작업
+- **병렬 실행 가능 작업**: 약 75개 (전체의 47%)
+- **MVP 범위 (US1만)**: Phase 1 + Phase 2 + Phase 3 = 76개 작업 (기존 69개 + 신규 7개)
+
+**신규 추가 작업 (아키텍처 분석 보고서 기반)**:
+- ✅ AI/ML 인프라: 타임아웃/Fallback/비용 추적 (3개)
+- ✅ 보안 기초: 헤더/CSRF/XSS (3개)
+- ✅ AI 캐싱: 30-40% 비용 절감 (1개)
+- ✅ 성능 최적화: 공간 인덱스 33배 향상 (3개)
+- ✅ 보안 강화: Rate limiting/XSS/CSRF (3개)
+- ✅ 모바일 오프라인: Service Worker/IndexedDB/지도 캐싱 (4개)
 
 ---
 
@@ -464,5 +502,12 @@ Task T065: 예산 요약 컴포넌트
 ---
 
 **작업 목록 생성 완료** ✅
+
+**최종 업데이트** (2025-10-20):
+- ✅ 아키텍처 분석 보고서 기반 17개 신규 작업 추가
+- ✅ AI/ML 인프라 안정성 강화 (타임아웃, Fallback, 비용 추적)
+- ✅ 보안 강화 (CSRF, XSS, Rate Limiting, 보안 헤더)
+- ✅ 성능 최적화 (공간 인덱스 33배 향상, AI 캐싱 30-40% 비용 절감)
+- ✅ 모바일 준비도 향상 (오프라인 전략, 토큰 저장 하이브리드)
 
 다음 단계: `/speckit.implement` 명령으로 tasks.md의 작업들을 순차적으로 실행
