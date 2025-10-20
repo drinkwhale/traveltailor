@@ -1,11 +1,11 @@
-# 개발자 빠른 시작 가이드: AI TripSmith
+# 개발자 빠른 시작 가이드: AI TravelTailor
 
 **최종 업데이트**: 2025-10-19
 **대상 독자**: 처음으로 프로젝트를 설정하는 개발자
 
 ## 개요
 
-AI TripSmith는 AI를 사용하여 개인화된 여행 일정을 생성하는 웹 애플리케이션입니다. 이 가이드는 개발 환경을 설정하고 프로젝트 구조를 이해하는 데 도움을 줍니다.
+AI TravelTailor는 AI를 사용하여 개인화된 여행 일정을 생성하는 웹 애플리케이션입니다. 이 가이드는 개발 환경을 설정하고 프로젝트 구조를 이해하는 데 도움을 줍니다.
 
 ---
 
@@ -47,7 +47,7 @@ cd traveltailor
 **백엔드: `backend/.env`**
 ```env
 # 데이터베이스 (Supabase)
-DATABASE_URL=postgresql://user:password@host:5432/tripsmith
+DATABASE_URL=postgresql://user:password@host:5432/TravelTailor
 SUPABASE_URL=https://your-project.supabase.co
 SUPABASE_ANON_KEY=your-anon-key
 
@@ -74,7 +74,7 @@ API_PORT=8000
 ALLOWED_ORIGINS=http://localhost:3000
 
 # PDF 생성
-PDF_TEMP_DIR=/tmp/tripsmith-pdfs
+PDF_TEMP_DIR=/tmp/TravelTailor-pdfs
 ```
 
 **프론트엔드: `frontend/.env.local`**

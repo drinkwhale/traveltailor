@@ -1,4 +1,4 @@
-# 작업 목록: AI TripSmith - 개인 맞춤형 여행 설계 서비스
+# 작업 목록: AI TravelTailor - 개인 맞춤형 여행 설계 서비스
 
 **입력**: `/specs/001-ai-travel-planner/`의 설계 문서
 **사전 요구사항**: plan.md (필수), spec.md (필수), research.md, data-model.md, contracts/
@@ -20,14 +20,14 @@
 
 **목적**: 프로젝트 초기화 및 기본 구조 생성
 
-- [ ] T001 plan.md에 따라 프로젝트 디렉토리 구조 생성 (backend/, frontend/, shared/)
-- [ ] T002 [P] 백엔드 Python 프로젝트 초기화 (FastAPI, requirements.txt)
-- [ ] T003 [P] 프론트엔드 Next.js 15 프로젝트 초기화 (TypeScript, Tailwind CSS)
-- [ ] T004 [P] 공유 TypeScript 타입 패키지 설정 in shared/types/
-- [ ] T005 [P] 백엔드 린팅 설정 (black, ruff, mypy) in backend/
-- [ ] T006 [P] 프론트엔드 린팅 설정 (ESLint, Prettier) in frontend/
-- [ ] T007 환경 변수 템플릿 생성 (backend/.env.example, frontend/.env.local.example)
-- [ ] T008 Git 설정 (.gitignore, pre-commit hooks)
+- [x] T001 plan.md에 따라 프로젝트 디렉토리 구조 생성 (backend/, frontend/, shared/)
+- [x] T002 [P] 백엔드 Python 프로젝트 초기화 (FastAPI, requirements.txt)
+- [x] T003 [P] 프론트엔드 Next.js 15 프로젝트 초기화 (TypeScript, Tailwind CSS)
+- [x] T004 [P] 공유 TypeScript 타입 패키지 설정 in shared/types/
+- [x] T005 [P] 백엔드 린팅 설정 (black, ruff, mypy) in backend/
+- [x] T006 [P] 프론트엔드 린팅 설정 (ESLint, Prettier) in frontend/
+- [x] T007 환경 변수 템플릿 생성 (backend/.env.example, frontend/.env.local.example)
+- [x] T008 Git 설정 (.gitignore, pre-commit hooks)
 
 ---
 
@@ -210,7 +210,7 @@
 
 ### 브랜딩 및 스타일링 (US3)
 
-- [ ] T093 [P] [US3] TripSmith 로고 및 브랜드 에셋 추가 in backend/src/services/pdf/assets/
+- [ ] T093 [P] [US3] TravelTailor 로고 및 브랜드 에셋 추가 in backend/src/services/pdf/assets/
 - [ ] T094 [P] [US3] PDF 스타일 시트 작성 (Tailwind CSS) in backend/src/services/pdf/templates/styles.css
 
 **체크포인트**: User Story 3 완료 - 여행 일정을 브랜딩된 PDF로 다운로드하여 오프라인에서도 확인 가능해야 함

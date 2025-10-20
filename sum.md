@@ -1,4 +1,4 @@
-# AI TripSmith 프로젝트 작업 요약
+# AI TravelTailor 프로젝트 작업 요약
 
 ## 📊 전체 개요
 
