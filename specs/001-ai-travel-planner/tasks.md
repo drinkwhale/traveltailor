@@ -74,15 +74,15 @@
 
 ### AI/ML 인프라 (아키텍처 분석 보고서 기반 추가)
 
-- [ ] T031a [P] OpenAI API 타임아웃 및 Retry 로직 구현 (tenacity, 60초 타임아웃) in backend/src/integrations/openai_client.py
-- [ ] T031b [P] AI Fallback 메커니즘 (규칙 기반 백업 시스템) in backend/src/services/ai/fallback.py
-- [ ] T031c [P] AI 비용 추적 미들웨어 (일일 예산 $50 제한) in backend/src/middleware/cost_tracking.py
+- [x] T031a [P] OpenAI API 타임아웃 및 Retry 로직 구현 (tenacity, 60초 타임아웃) in backend/src/integrations/openai_client.py
+- [x] T031b [P] AI Fallback 메커니즘 (규칙 기반 백업 시스템) in backend/src/services/ai/fallback.py
+- [x] T031c [P] AI 비용 추적 미들웨어 (일일 예산 $50 제한) in backend/src/middleware/cost_tracking.py
 
 ### 보안 기초 설정 (아키텍처 분석 보고서 기반 추가)
 
-- [ ] T032a [P] 보안 헤더 미들웨어 (CSP, X-XSS-Protection, HSTS) in backend/src/middleware/security_headers.py
-- [ ] T032b [P] CSRF 보호 설정 (fastapi-csrf-protect) in backend/src/core/csrf.py
-- [ ] T032c [P] DOMPurify 설정 (XSS 방어) in frontend/src/lib/sanitize.ts
+- [x] T032a [P] 보안 헤더 미들웨어 (CSP, X-XSS-Protection, HSTS) in backend/src/middleware/security_headers.py
+- [x] T032b [P] CSRF 보호 설정 (fastapi-csrf-protect) in backend/src/core/csrf.py
+- [x] T032c [P] DOMPurify 설정 (XSS 방어) in frontend/src/lib/sanitize.ts
 
 **체크포인트**: 기반 인프라 완료 - 이제 사용자 스토리 병렬 작업 시작 가능
 
