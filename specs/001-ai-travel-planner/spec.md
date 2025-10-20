@@ -1,9 +1,9 @@
-# Feature Specification: AI TripSmith - 개인 맞춤형 여행 설계 서비스
+# Feature Specification: AI TravelTailor - 개인 맞춤형 여행 설계 서비스
 
 **Feature Branch**: `001-ai-travel-planner`
 **Created**: 2025-10-19
 **Status**: Draft
-**Input**: User description: "AI TripSmith - 개인 맞춤형 여행 설계 서비스"
+**Input**: User description: "AI TravelTailor - 개인 맞춤형 여행 설계 서비스"
 
 ## User Scenarios & Testing *(mandatory)*
 
@@ -61,7 +61,7 @@
 
 2. **Given** PDF 파일이 다운로드되었을 때, **When** 사용자가 파일을 열면, **Then** 날짜별 일정, 장소 정보, 지도, 예산 요약이 깔끔하게 포맷되어 표시됩니다.
 
-3. **Given** PDF가 생성될 때, **When** 사용자가 문서를 확인하면, **Then** TripSmith 브랜드 로고와 스타일이 일관되게 적용되어 있습니다.
+3. **Given** PDF가 생성될 때, **When** 사용자가 문서를 확인하면, **Then** TravelTailor 브랜드 로고와 스타일이 일관되게 적용되어 있습니다.
 
 ---
 
@@ -139,7 +139,7 @@
 
 - **FR-010**: 시스템은 여행 일정을 PDF 문서로 생성하여 다운로드할 수 있어야 하며, PDF 생성 시간은 10초를 초과하지 않아야 합니다.
 
-- **FR-011**: PDF 문서는 날짜별 일정, 장소 정보, 지도 이미지, 예산 요약, TripSmith 브랜딩을 포함해야 합니다.
+- **FR-011**: PDF 문서는 날짜별 일정, 장소 정보, 지도 이미지, 예산 요약, TravelTailor 브랜딩을 포함해야 합니다.
 
 - **FR-012**: 시스템은 여행 목적지와 날짜에 맞는 항공편 옵션(최소 2-3개)과 예약 링크를 제공해야 합니다.
 

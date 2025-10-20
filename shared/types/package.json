@@ -1,0 +1,14 @@
+{
+  "name": "@ai-traveltailor/shared-types",
+  "version": "1.0.0",
+  "description": "Shared TypeScript types for AI TravelTailor",
+  "main": "index.ts",
+  "types": "index.ts",
+  "private": true,
+  "scripts": {
+    "type-check": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "typescript": "^5.6.3"
+  }
+}

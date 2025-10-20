@@ -1,6 +1,6 @@
 openapi: 3.0.3
 info:
-  title: AI TripSmith API
+  title: AI TravelTailor API
   description: |
     REST API for AI-powered travel itinerary planning service.
 
@@ -13,13 +13,13 @@ info:
 
   version: 1.0.0
   contact:
-    name: AI TripSmith Support
-    email: support@tripsmith.com
+    name: AI TravelTailor Support
+    email: support@TravelTailor.com
 
 servers:
-  - url: https://api.tripsmith.com/v1
+  - url: https://api.TravelTailor.com/v1
     description: Production server
-  - url: https://staging-api.tripsmith.com/v1
+  - url: https://staging-api.TravelTailor.com/v1
     description: Staging server
   - url: http://localhost:8000/v1
     description: Local development server

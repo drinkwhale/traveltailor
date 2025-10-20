@@ -1,4 +1,4 @@
-# 작업 목록: AI TripSmith - 개인 맞춤형 여행 설계 서비스
+# 작업 목록: AI TravelTailor - 개인 맞춤형 여행 설계 서비스
 
 **입력**: `/specs/001-ai-travel-planner/`의 설계 문서
 **사전 요구사항**: plan.md (필수), spec.md (필수), research.md, data-model.md, contracts/
@@ -20,14 +20,14 @@
 
 **목적**: 프로젝트 초기화 및 기본 구조 생성
 
-- [ ] T001 plan.md에 따라 프로젝트 디렉토리 구조 생성 (backend/, frontend/, shared/)
-- [ ] T002 [P] 백엔드 Python 프로젝트 초기화 (FastAPI, requirements.txt)
-- [ ] T003 [P] 프론트엔드 Next.js 15 프로젝트 초기화 (TypeScript, Tailwind CSS)
-- [ ] T004 [P] 공유 TypeScript 타입 패키지 설정 in shared/types/
-- [ ] T005 [P] 백엔드 린팅 설정 (black, ruff, mypy) in backend/
-- [ ] T006 [P] 프론트엔드 린팅 설정 (ESLint, Prettier) in frontend/
-- [ ] T007 환경 변수 템플릿 생성 (backend/.env.example, frontend/.env.local.example)
-- [ ] T008 Git 설정 (.gitignore, pre-commit hooks)
+- [x] T001 plan.md에 따라 프로젝트 디렉토리 구조 생성 (backend/, frontend/, shared/)
+- [x] T002 [P] 백엔드 Python 프로젝트 초기화 (FastAPI, requirements.txt)
+- [x] T003 [P] 프론트엔드 Next.js 15 프로젝트 초기화 (TypeScript, Tailwind CSS)
+- [x] T004 [P] 공유 TypeScript 타입 패키지 설정 in shared/types/
+- [x] T005 [P] 백엔드 린팅 설정 (black, ruff, mypy) in backend/
+- [x] T006 [P] 프론트엔드 린팅 설정 (ESLint, Prettier) in frontend/
+- [x] T007 환경 변수 템플릿 생성 (backend/.env.example, frontend/.env.local.example)
+- [x] T008 Git 설정 (.gitignore, pre-commit hooks)
 
 ---
 
@@ -39,22 +39,22 @@
 
 ### 데이터베이스 및 인증 (FR-014 지원)
 
-- [ ] T009 Supabase 프로젝트 설정 및 연결 구성
-- [ ] T010 Alembic 마이그레이션 프레임워크 설정 in backend/alembic/
-- [ ] T011 User 모델 및 테이블 생성 in backend/src/models/user.py
-- [ ] T012 UserPreference 모델 및 테이블 생성 in backend/src/models/user_preference.py
+- [x] T009 Supabase 프로젝트 설정 및 연결 구성
+- [x] T010 Alembic 마이그레이션 프레임워크 설정 in backend/alembic/
+- [x] T011 User 모델 및 테이블 생성 in backend/src/models/user.py
+- [x] T012 UserPreference 모델 및 테이블 생성 in backend/src/models/user_preference.py
 - [ ] T013 데이터베이스 마이그레이션 스크립트 작성 (users, user_preferences)
-- [ ] T014 Supabase Auth 설정 (이메일/비밀번호 인증)
-- [ ] T015 JWT 인증 미들웨어 구현 in backend/src/core/security.py
-- [ ] T016 인증 API 엔드포인트 구현 in backend/src/api/v1/auth.py (회원가입, 로그인, 프로필 조회)
+- [x] T014 Supabase Auth 설정 (이메일/비밀번호 인증)
+- [x] T015 JWT 인증 미들웨어 구현 in backend/src/core/security.py
+- [x] T016 인증 API 엔드포인트 구현 in backend/src/api/v1/auth.py (회원가입, 로그인, 프로필 조회)
 
 ### 백엔드 핵심 인프라
 
-- [ ] T017 [P] FastAPI 앱 초기화 및 라우터 구조 in backend/src/main.py
-- [ ] T018 [P] 데이터베이스 연결 관리자 in backend/src/core/database.py
-- [ ] T019 [P] 전역 에러 핸들링 및 로깅 설정 in backend/src/core/exceptions.py
-- [ ] T020 [P] API 응답 스키마 기본 구조 in backend/src/schemas/base.py
-- [ ] T021 [P] 환경 설정 관리 in backend/src/config.py
+- [x] T017 [P] FastAPI 앱 초기화 및 라우터 구조 in backend/src/main.py
+- [x] T018 [P] 데이터베이스 연결 관리자 in backend/src/core/database.py
+- [x] T019 [P] 전역 에러 핸들링 및 로깅 설정 in backend/src/core/exceptions.py
+- [x] T020 [P] API 응답 스키마 기본 구조 in backend/src/schemas/base.py
+- [x] T021 [P] 환경 설정 관리 in backend/src/config.py
 
 ### 프론트엔드 핵심 인프라
 
@@ -210,7 +210,7 @@
 
 ### 브랜딩 및 스타일링 (US3)
 
-- [ ] T093 [P] [US3] TripSmith 로고 및 브랜드 에셋 추가 in backend/src/services/pdf/assets/
+- [ ] T093 [P] [US3] TravelTailor 로고 및 브랜드 에셋 추가 in backend/src/services/pdf/assets/
 - [ ] T094 [P] [US3] PDF 스타일 시트 작성 (Tailwind CSS) in backend/src/services/pdf/templates/styles.css
 
 **체크포인트**: User Story 3 완료 - 여행 일정을 브랜딩된 PDF로 다운로드하여 오프라인에서도 확인 가능해야 함

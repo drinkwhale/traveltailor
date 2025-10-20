@@ -1,11 +1,11 @@
-# Implementation Plan: AI TripSmith - 개인 맞춤형 여행 설계 서비스
+# Implementation Plan: AI TravelTailor - 개인 맞춤형 여행 설계 서비스
 
 **Branch**: `001-ai-travel-planner` | **Date**: 2025-10-19 | **Spec**: [spec.md](./spec.md)
 **Input**: Feature specification from `/specs/001-ai-travel-planner/spec.md`
 
 ## Summary
 
-AI TripSmith는 사용자의 여행 조건(목적지, 기간, 예산, 선호사항)을 입력받아 AI가 최적화된 전체 여행 일정을 자동으로 생성하는 서비스입니다. 웹 애플리케이션으로 시작하지만, 향후 네이티브 모바일 앱으로의 확장을 고려하여 설계됩니다.
+AI TravelTailor는 사용자의 여행 조건(목적지, 기간, 예산, 선호사항)을 입력받아 AI가 최적화된 전체 여행 일정을 자동으로 생성하는 서비스입니다. 웹 애플리케이션으로 시작하지만, 향후 네이티브 모바일 앱으로의 확장을 고려하여 설계됩니다.
 
 핵심 기능:
 - AI 기반 여행 일정 자동 생성 (30초 이내)
