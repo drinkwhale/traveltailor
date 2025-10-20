@@ -1,7 +1,7 @@
 {
-  "name": "ai-tripsmith-frontend",
+  "name": "ai-traveltailor-frontend",
   "version": "1.0.0",
-  "description": "AI TripSmith - 개인 맞춤형 여행 설계 서비스 프론트엔드",
+  "description": "AI TravelTailor - 개인 맞춤형 여행 설계 서비스 프론트엔드",
   "private": true,
   "scripts": {
     "dev": "next dev",

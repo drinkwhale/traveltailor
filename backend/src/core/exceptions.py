@@ -11,8 +11,8 @@ import logging
 logger = logging.getLogger(__name__)
 
 
-class TripSmithException(Exception):
-    """Base exception for TripSmith"""
+class TravelTailorException(Exception):
+    """Base exception for TravelTailor"""
 
     def __init__(self, message: str, status_code: int = status.HTTP_400_BAD_REQUEST):
         self.message = message
@@ -20,37 +20,37 @@ class TripSmithException(Exception):
         super().__init__(self.message)
 
 
-class NotFoundException(TripSmithException):
+class NotFoundException(TravelTailorException):
     """Resource not found"""
 
     def __init__(self, resource: str):
         super().__init__(f"{resource} not found", status.HTTP_404_NOT_FOUND)
 
 
-class DuplicateException(TripSmithException):
+class DuplicateException(TravelTailorException):
     """Duplicate resource"""
 
     def __init__(self, resource: str):
         super().__init__(f"{resource} already exists", status.HTTP_409_CONFLICT)
 
 
-class UnauthorizedException(TripSmithException):
+class UnauthorizedException(TravelTailorException):
     """Unauthorized access"""
 
     def __init__(self, message: str = "Unauthorized"):
         super().__init__(message, status.HTTP_401_UNAUTHORIZED)
 
 
-class ForbiddenException(TripSmithException):
+class ForbiddenException(TravelTailorException):
     """Forbidden access"""
 
     def __init__(self, message: str = "Forbidden"):
         super().__init__(message, status.HTTP_403_FORBIDDEN)
 
 
-async def tripsmith_exception_handler(request: Request, exc: TripSmithException):
-    """Handle TripSmith custom exceptions"""
-    logger.error(f"TripSmith exception: {exc.message}")
+async def traveltailor_exception_handler(request: Request, exc: TravelTailorException):
+    """Handle TravelTailor custom exceptions"""
+    logger.error(f"TravelTailor exception: {exc.message}")
     return JSONResponse(
         status_code=exc.status_code, content={"success": False, "error": exc.message}
     )

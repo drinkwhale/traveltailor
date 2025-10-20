@@ -1,5 +1,5 @@
 """
-AI TripSmith Backend - FastAPI Application Entry Point
+AI TravelTailor Backend - FastAPI Application Entry Point
 """
 
 from fastapi import FastAPI
@@ -23,7 +23,7 @@ async def lifespan(app: FastAPI):
 
 # Application metadata
 app = FastAPI(
-    title="AI TripSmith API",
+    title="AI TravelTailor API",
     description="개인 맞춤형 여행 설계 서비스 - AI 기반 여행 일정 자동 생성",
     version="1.0.0",
     docs_url="/docs",
@@ -47,7 +47,7 @@ app.include_router(auth.router, prefix="/v1")
 @app.get("/")
 async def root():
     """Health check endpoint"""
-    return {"status": "healthy", "service": "AI TripSmith API", "version": "1.0.0"}
+    return {"status": "healthy", "service": "AI TravelTailor API", "version": "1.0.0"}
 
 
 @app.get("/health")

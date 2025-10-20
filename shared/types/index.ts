@@ -1,5 +1,5 @@
 /**
- * Shared TypeScript types for AI TripSmith
+ * Shared TypeScript types for AI TravelTailor
  * Frontend와 Backend 간 공유되는 타입 정의
  */
 
