@@ -58,19 +58,19 @@
 
 ### 프론트엔드 핵심 인프라
 
-- [ ] T022 [P] Next.js 레이아웃 및 라우팅 구조 설정 in frontend/src/app/layout.tsx
-- [ ] T023 [P] Supabase 클라이언트 설정 in frontend/src/lib/supabase.ts
-- [ ] T024 [P] API 클라이언트 기본 구조 (Axios/Fetch) in frontend/src/services/api.ts
-- [ ] T025 [P] 인증 서비스 및 훅 in frontend/src/services/auth.ts, frontend/src/hooks/useAuth.ts
-- [ ] T026 [P] 로그인/회원가입 페이지 in frontend/src/app/login/page.tsx, frontend/src/app/register/page.tsx
-- [ ] T027 [P] Tailwind CSS 및 기본 스타일 설정 in frontend/tailwind.config.ts
-- [ ] T028 [P] Shadcn UI 컴포넌트 라이브러리 설치 및 설정
+- [x] T022 [P] Next.js 레이아웃 및 라우팅 구조 설정 in frontend/src/app/layout.tsx
+- [x] T023 [P] Supabase 클라이언트 설정 in frontend/src/lib/supabase.ts
+- [x] T024 [P] API 클라이언트 기본 구조 (Axios/Fetch) in frontend/src/lib/api.ts
+- [x] T025 [P] 인증 서비스 및 훅 in frontend/src/lib/auth.ts, frontend/src/hooks/useAuth.ts
+- [x] T026 [P] 로그인/회원가입 페이지 in frontend/src/app/(public)/login/page.tsx, frontend/src/app/(public)/signup/page.tsx
+- [x] T027 [P] Tailwind CSS 및 기본 스타일 설정 in frontend/tailwind.config.ts
+- [x] T028 [P] Shadcn UI 컴포넌트 라이브러리 설치 및 설정
 
 ### 외부 API 통합 기초
 
-- [ ] T029 [P] Google Places API 클라이언트 기본 구조 in backend/src/integrations/google_maps.py
-- [ ] T030 [P] OpenAI/LangChain 클라이언트 기본 구조 in backend/src/services/ai/__init__.py
-- [ ] T031 [P] Mapbox 설정 in frontend/src/lib/mapbox.ts
+- [x] T029 [P] Google Places API 클라이언트 기본 구조 in backend/src/integrations/google_maps.py
+- [x] T030 [P] OpenAI/LangChain 클라이언트 기본 구조 in backend/src/services/ai/__init__.py
+- [x] T031 [P] Mapbox 설정 in frontend/src/lib/mapbox.ts
 
 **체크포인트**: 기반 인프라 완료 - 이제 사용자 스토리 병렬 작업 시작 가능
 
