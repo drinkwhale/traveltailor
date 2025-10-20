@@ -39,22 +39,22 @@
 
 ### 데이터베이스 및 인증 (FR-014 지원)
 
-- [ ] T009 Supabase 프로젝트 설정 및 연결 구성
-- [ ] T010 Alembic 마이그레이션 프레임워크 설정 in backend/alembic/
-- [ ] T011 User 모델 및 테이블 생성 in backend/src/models/user.py
-- [ ] T012 UserPreference 모델 및 테이블 생성 in backend/src/models/user_preference.py
+- [x] T009 Supabase 프로젝트 설정 및 연결 구성
+- [x] T010 Alembic 마이그레이션 프레임워크 설정 in backend/alembic/
+- [x] T011 User 모델 및 테이블 생성 in backend/src/models/user.py
+- [x] T012 UserPreference 모델 및 테이블 생성 in backend/src/models/user_preference.py
 - [ ] T013 데이터베이스 마이그레이션 스크립트 작성 (users, user_preferences)
-- [ ] T014 Supabase Auth 설정 (이메일/비밀번호 인증)
-- [ ] T015 JWT 인증 미들웨어 구현 in backend/src/core/security.py
-- [ ] T016 인증 API 엔드포인트 구현 in backend/src/api/v1/auth.py (회원가입, 로그인, 프로필 조회)
+- [x] T014 Supabase Auth 설정 (이메일/비밀번호 인증)
+- [x] T015 JWT 인증 미들웨어 구현 in backend/src/core/security.py
+- [x] T016 인증 API 엔드포인트 구현 in backend/src/api/v1/auth.py (회원가입, 로그인, 프로필 조회)
 
 ### 백엔드 핵심 인프라
 
-- [ ] T017 [P] FastAPI 앱 초기화 및 라우터 구조 in backend/src/main.py
-- [ ] T018 [P] 데이터베이스 연결 관리자 in backend/src/core/database.py
-- [ ] T019 [P] 전역 에러 핸들링 및 로깅 설정 in backend/src/core/exceptions.py
-- [ ] T020 [P] API 응답 스키마 기본 구조 in backend/src/schemas/base.py
-- [ ] T021 [P] 환경 설정 관리 in backend/src/config.py
+- [x] T017 [P] FastAPI 앱 초기화 및 라우터 구조 in backend/src/main.py
+- [x] T018 [P] 데이터베이스 연결 관리자 in backend/src/core/database.py
+- [x] T019 [P] 전역 에러 핸들링 및 로깅 설정 in backend/src/core/exceptions.py
+- [x] T020 [P] API 응답 스키마 기본 구조 in backend/src/schemas/base.py
+- [x] T021 [P] 환경 설정 관리 in backend/src/config.py
 
 ### 프론트엔드 핵심 인프라
 
