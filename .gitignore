@@ -42,11 +42,14 @@ Thumbs.db
 *.swo
 
 # ====================
-# Claude Code
+# Claude Code & AI Tools
 # ====================
 .claude/settings.local.json
 .claude/.chat_history/
 .claude/temp/
+
+# Serena MCP Server (local context/memory)
+.serena/
 
 # ====================
 # Node.js / Frontend
