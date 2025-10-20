@@ -1,4 +1,4 @@
-# AI TripSmith Frontend
+# AI TravelTailor Frontend
 
 Next.js 15 + React 19 기반 여행 계획 생성 프론트엔드
 
