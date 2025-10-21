@@ -9,6 +9,7 @@ from contextlib import asynccontextmanager
 from .config.settings import settings
 from .config.database import init_db, close_db
 from .api.v1 import auth
+from .metrics.ai_pipeline import register_metrics
 
 
 @asynccontextmanager
@@ -42,6 +43,9 @@ app.add_middleware(
 
 # Register routers
 app.include_router(auth.router, prefix="/v1")
+
+if settings.METRICS_ENABLED:
+    register_metrics(app)
 
 
 @app.get("/")
