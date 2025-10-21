@@ -148,7 +148,7 @@ export function MapView({
     })
     routeLayersRef.current = []
 
-    routes.forEach((route, index) => {
+    routes.forEach((route, _index) => {
       const coordinates = decodePolyline(route.polyline)
       if (coordinates.length === 0) {
         const start = markerMap.get(route.from_place_id)

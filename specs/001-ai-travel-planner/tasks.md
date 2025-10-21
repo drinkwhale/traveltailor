@@ -294,23 +294,23 @@
 
 ### 백엔드 - 선호도 학습 및 저장 (US5)
 
-- [ ] T112 [US5] 사용자 선호도 학습 로직 (여행 기록 분석) in backend/src/services/preferences/learning.py
-- [ ] T113 [US5] 선호도 자동 업데이트 서비스 (여행 생성 시 트리거) in backend/src/services/preferences/auto_updater.py
-- [ ] T114 [P] [US5] GET /v1/preferences 엔드포인트 in backend/src/api/v1/preferences.py
-- [ ] T115 [P] [US5] PUT /v1/preferences 엔드포인트 in backend/src/api/v1/preferences.py
+- [x] T112 [US5] 사용자 선호도 학습 로직 (여행 기록 분석) in backend/src/services/preferences/learning.py
+- [x] T113 [US5] 선호도 자동 업데이트 서비스 (여행 생성 시 트리거) in backend/src/services/preferences/auto_updater.py
+- [x] T114 [P] [US5] GET /v1/preferences 엔드포인트 in backend/src/api/v1/preferences.py
+- [x] T115 [P] [US5] PUT /v1/preferences 엔드포인트 in backend/src/api/v1/preferences.py
 
 ### 프론트엔드 - 선호도 관리 UI (US5)
 
-- [ ] T116 [US5] 선호도 설정 페이지 in frontend/src/app/(auth)/preferences/page.tsx
-- [ ] T117 [US5] 선호도 폼 컴포넌트 in frontend/src/components/forms/PreferencesForm.tsx
-- [ ] T118 [US5] 여행 생성 폼에 자동 선호도 반영 로직 in frontend/src/components/forms/TravelPlanForm.tsx (T058 업데이트)
+- [x] T116 [US5] 선호도 설정 페이지 in frontend/src/app/(auth)/preferences/page.tsx
+- [x] T117 [US5] 선호도 폼 컴포넌트 in frontend/src/components/forms/PreferencesForm.tsx
+- [x] T118 [US5] 여행 생성 폼에 자동 선호도 반영 로직 in frontend/src/components/forms/TravelPlanForm.tsx (T058 업데이트)
 
 ### 프론트엔드 - 여행 히스토리 (US5)
 
-- [ ] T119 [US5] 여행 히스토리 페이지 in frontend/src/app/(auth)/history/page.tsx
-- [ ] T120 [P] [US5] 여행 목록 카드 컴포넌트 in frontend/src/components/history/TravelPlanCard.tsx
-- [ ] T121 [P] [US5] 필터 및 정렬 기능 in frontend/src/components/history/FiltersBar.tsx
-- [ ] T122 [US5] 과거 여행 상세 조회 및 PDF 재다운로드 기능 통합
+- [x] T119 [US5] 여행 히스토리 페이지 in frontend/src/app/(auth)/history/page.tsx
+- [x] T120 [P] [US5] 여행 목록 카드 컴포넌트 in frontend/src/components/history/TravelPlanCard.tsx
+- [x] T121 [P] [US5] 필터 및 정렬 기능 in frontend/src/components/history/FiltersBar.tsx
+- [x] T122 [US5] 과거 여행 상세 조회 및 PDF 재다운로드 기능 통합
 
 **체크포인트**: User Story 5 완료 - 사용자 선호도가 학습되고, 히스토리를 조회하며, 다음 여행 계획 시 자동 반영되어야 함
 

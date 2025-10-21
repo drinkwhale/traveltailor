@@ -12,3 +12,4 @@ export * from './travel-plan';
 export * from './map';
 export * from './recommendations';
 export * from './pdf';
+export * from './preferences';

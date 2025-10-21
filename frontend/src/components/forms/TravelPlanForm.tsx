@@ -1,8 +1,10 @@
 'use client'
 
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 
-import type { TravelPlanCreate, TravelPlanDetail, TravelerType } from '@shared-types/travel-plan'
+import type { TravelPlanCreate, TravelPlanDetail } from '@shared-types/travel-plan'
+import type { TravelerType } from '@shared-types/enums'
+import type { UserPreferenceResponse } from '@shared-types/preferences'
 
 const travelerTypeOptions: { label: string; value: TravelerType }[] = [
   { label: '커플', value: 'couple' },
@@ -25,6 +27,7 @@ interface TravelPlanFormProps {
   isSubmitting?: boolean
   errorMessage?: string
   warnings?: string[]
+  preferenceDefaults?: UserPreferenceResponse | null
 }
 
 const initialFormState: TravelPlanCreate = {
@@ -46,9 +49,88 @@ const initialFormState: TravelPlanCreate = {
   },
 }
 
-export function TravelPlanForm({ onSubmit, isSubmitting, errorMessage, warnings = [] }: TravelPlanFormProps) {
+function isTravelerType(value: unknown): value is TravelerType {
+  return value === 'couple' || value === 'family' || value === 'solo' || value === 'friends'
+}
+
+function isPreferencePace(value: unknown): value is TravelPlanCreate['preferences']['pace'] {
+  return value === 'slow' || value === 'normal' || value === 'fast'
+}
+
+function hasApplicableDefaults(preferences: UserPreferenceResponse | null | undefined): boolean {
+  if (!preferences) {
+    return false
+  }
+
+  return Boolean(
+    (preferences.preferred_traveler_types && preferences.preferred_traveler_types.length > 0) ||
+      (preferences.preferred_interests && preferences.preferred_interests.length > 0) ||
+      (preferences.avoided_activities && preferences.avoided_activities.length > 0) ||
+      (preferences.dietary_restrictions && preferences.dietary_restrictions.length > 0) ||
+      (typeof preferences.last_budget_total === 'number' && preferences.last_budget_total > 0) ||
+      (typeof preferences.default_budget_max === 'number' && preferences.default_budget_max > 0) ||
+      (typeof preferences.default_budget_min === 'number' && preferences.default_budget_min > 0)
+  )
+}
+
+function buildStateFromPreferences(preferences: UserPreferenceResponse): TravelPlanCreate {
+  const travelerTypeCandidate = preferences.preferred_traveler_types?.[0]
+  const travelerType = isTravelerType(travelerTypeCandidate)
+    ? travelerTypeCandidate
+    : initialFormState.traveler_type
+
+  const budgetCandidates = [
+    preferences.last_budget_total,
+    preferences.default_budget_max,
+    preferences.default_budget_min,
+  ].filter((value): value is number => typeof value === 'number' && value > 0)
+  const budgetTotal = budgetCandidates.length > 0 ? budgetCandidates[0] : initialFormState.budget_total
+
+  const interests =
+    preferences.preferred_interests && preferences.preferred_interests.length > 0
+      ? preferences.preferred_interests
+      : initialFormState.preferences.interests
+
+  const avoid = preferences.avoided_activities ?? []
+  const dietary = preferences.dietary_restrictions ?? []
+  const pace = isPreferencePace(preferences.preferred_pace)
+    ? preferences.preferred_pace
+    : initialFormState.preferences.pace
+  const notes =
+    typeof preferences.recent_notes === 'string' && preferences.recent_notes.length > 0
+      ? preferences.recent_notes
+      : initialFormState.preferences.notes ?? ''
+
+  return {
+    ...initialFormState,
+    budget_total: budgetTotal,
+    traveler_type: travelerType,
+    preferences: {
+      ...initialFormState.preferences,
+      interests: [...interests],
+      avoid: [...avoid],
+      dietary_restrictions: [...dietary],
+      pace,
+      notes,
+    },
+  }
+}
+
+export function TravelPlanForm({
+  onSubmit,
+  isSubmitting,
+  errorMessage,
+  warnings = [],
+  preferenceDefaults,
+}: TravelPlanFormProps) {
   const [formState, setFormState] = useState<TravelPlanCreate>(initialFormState)
   const [localError, setLocalError] = useState<string | null>(null)
+  const [hasPrefillApplied, setHasPrefillApplied] = useState<boolean>(false)
+  const [hasUserEdited, setHasUserEdited] = useState<boolean>(false)
+  const canApplyDefaults = useMemo(
+    () => hasApplicableDefaults(preferenceDefaults),
+    [preferenceDefaults]
+  )
 
   const minEndDate = useMemo(() => {
     if (!formState.start_date) return ''
@@ -57,8 +139,21 @@ export function TravelPlanForm({ onSubmit, isSubmitting, errorMessage, warnings 
     return start.toISOString().split('T')[0]
   }, [formState.start_date])
 
+  useEffect(() => {
+    if (!preferenceDefaults || hasPrefillApplied || hasUserEdited || !canApplyDefaults) {
+      return
+    }
+    setFormState(buildStateFromPreferences(preferenceDefaults))
+    setHasPrefillApplied(true)
+  }, [preferenceDefaults, hasPrefillApplied, hasUserEdited, canApplyDefaults])
+
+  const markEdited = () => {
+    setHasUserEdited(true)
+  }
+
   const handleChange = (field: keyof TravelPlanCreate, value: any) => {
     setFormState((prev) => ({ ...prev, [field]: value }))
+    markEdited()
   }
 
   const handlePreferenceChange = (field: keyof TravelPlanCreate['preferences'], value: any) => {
@@ -69,6 +164,7 @@ export function TravelPlanForm({ onSubmit, isSubmitting, errorMessage, warnings 
         [field]: value,
       },
     }))
+    markEdited()
   }
 
   const handleInterestToggle = (value: string) => {
@@ -79,6 +175,14 @@ export function TravelPlanForm({ onSubmit, isSubmitting, errorMessage, warnings 
       current.add(value)
     }
     handlePreferenceChange('interests', Array.from(current))
+  }
+
+  const applyPreferenceDefaults = () => {
+    if (!preferenceDefaults || !canApplyDefaults) return
+    setFormState(buildStateFromPreferences(preferenceDefaults))
+    setLocalError(null)
+    setHasPrefillApplied(true)
+    setHasUserEdited(false)
   }
 
   const validate = () => {
@@ -129,6 +233,11 @@ export function TravelPlanForm({ onSubmit, isSubmitting, errorMessage, warnings 
       <div>
         <h2 className="text-xl font-semibold text-slate-900">여행 조건 입력</h2>
         <p className="mt-1 text-sm text-slate-600">목적지와 예산을 입력하면 AI가 맞춤 일정을 제안합니다.</p>
+        {hasPrefillApplied && preferenceDefaults && canApplyDefaults ? (
+          <p className="mt-2 text-xs text-emerald-600">
+            최근 저장된 선호도가 기본값으로 적용되었습니다. 필요에 맞게 수정해주세요.
+          </p>
+        ) : null}
       </div>
 
       <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
@@ -310,9 +419,19 @@ export function TravelPlanForm({ onSubmit, isSubmitting, errorMessage, warnings 
           onClick={() => {
             setFormState(initialFormState)
             setLocalError(null)
+            setHasUserEdited(false)
           }}
         >
           초기화
+        </button>
+
+        <button
+          type="button"
+          className="rounded-lg border border-emerald-300 px-4 py-2 text-sm font-medium text-emerald-700 hover:bg-emerald-50 disabled:cursor-not-allowed disabled:opacity-60"
+          onClick={applyPreferenceDefaults}
+          disabled={!canApplyDefaults}
+        >
+          선호도 불러오기
         </button>
 
         <button
@@ -326,4 +445,3 @@ export function TravelPlanForm({ onSubmit, isSubmitting, errorMessage, warnings 
     </form>
   )
 }
-
