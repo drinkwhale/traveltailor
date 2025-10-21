@@ -18,13 +18,16 @@ class BudgetAllocationResult:
     per_day: int
     warnings: list[str] = field(default_factory=list)
 
-    def to_dict(self) -> dict[str, int]:
+    def to_dict(self) -> dict[str, int | dict[str, int] | list[str]]:
         return {
-            "accommodation": self.breakdown.accommodation,
-            "food": self.breakdown.food,
-            "activities": self.breakdown.activities,
-            "transport": self.breakdown.transport,
+            "breakdown": {
+                "accommodation": self.breakdown.accommodation,
+                "food": self.breakdown.food,
+                "activities": self.breakdown.activities,
+                "transport": self.breakdown.transport,
+            },
             "per_day": self.per_day,
+            "warnings": self.warnings,
         }
 
 

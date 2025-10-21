@@ -174,6 +174,7 @@ class TravelPlanner:
             budget_result = BudgetAllocationResult(
                 breakdown=BudgetBreakdown(**cached["budget"]["breakdown"]),
                 per_day=cached["budget"]["per_day"],
+                warnings=cached["budget"].get("warnings", []),
             )
         else:
             analyzed = self.preference_analyzer.analyze(payload, stored_pref)
