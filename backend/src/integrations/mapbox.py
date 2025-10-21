@@ -83,11 +83,13 @@ class MapboxClient:
         if steps:
             params["steps"] = "true"
 
-        response = await self._client.get(f"/mapbox/{profile}/{coordinate_path}", params=params)
         try:
+            response = await self._client.get(f"/mapbox/{profile}/{coordinate_path}", params=params)
             response.raise_for_status()
         except httpx.HTTPStatusError as exc:  # pragma: no cover - thin wrapper
             raise MapboxError(f"Mapbox request failed: {exc}") from exc
+        except httpx.RequestError as exc:  # pragma: no cover - network failures
+            raise MapboxError(f"Mapbox network error: {exc}") from exc
 
         data = response.json()
         routes = data.get("routes") or []
