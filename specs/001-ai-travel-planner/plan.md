@@ -109,7 +109,7 @@ AI TravelTailor는 사용자의 여행 조건(목적지, 기간, 예산, 선호�
 - **외부 API 비용/쿼터 관리**: Google Places, Mapbox, 항공/숙박 API에 대해 예상 호출량 기반 비용 계산을 문서화하고, Redis 캐시와 지오해싱으로 중복 호출을 줄인다.
 - **레이트 리밋 및 오류 처리**: 백엔드에서 per-user/per-IP 레이트 리밋을 적용하고, 외부 API 장애 시 사용자에게 명확한 상태 메시지를 제공한다.
 - **데이터 보호**: Supabase Auth 세션과 사용자 데이터은 at-rest/ in-transit 암호화, 삭제 요청 SLA 7일 이내 처리.
-- **기술 스택 업그레이드 전략**: Next.js 15, React 19 등 실험적 버전은 MVP 이후 별도 스파이크에서 검토하고, 호환성 검증 전까지는 LTS 버전을 유지한다.
+- **기술 스택 업그레이드 전략**: Next.js 14와 React 18 LTS를 기준으로 유지하고, 차기 메이저 버전은 MVP 이후 별도 스파이크에서 검토한다.
 
 ## Constitution Check
 

@@ -22,7 +22,7 @@
 
 - [x] T001 plan.md에 따라 프로젝트 디렉토리 구조 생성 (backend/, frontend/, shared/)
 - [x] T002 [P] 백엔드 Python 프로젝트 초기화 (FastAPI, requirements.txt)
-- [x] T003 [P] 프론트엔드 Next.js 15 프로젝트 초기화 (TypeScript, Tailwind CSS)
+- [x] T003 [P] 프론트엔드 Next.js 14 프로젝트 초기화 (TypeScript, Tailwind CSS)
 - [x] T004 [P] 공유 TypeScript 타입 패키지 설정 in shared/types/
 - [x] T005 [P] 백엔드 린팅 설정 (black, ruff, mypy) in backend/
 - [x] T006 [P] 프론트엔드 린팅 설정 (ESLint, Prettier) in frontend/

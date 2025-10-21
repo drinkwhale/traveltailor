@@ -179,7 +179,7 @@ routes (id, from_place_id, to_place_id, mode, duration, distance)
 
 ## 5. 프론트엔드 프레임워크 및 UI
 
-### 결정: Next.js 15 (App Router) + Tailwind CSS + Shadcn UI
+### 결정: Next.js 14 (App Router) + Tailwind CSS + Shadcn UI
 
 **근거**:
 - Next.js는 SSR, API 라우트 및 우수한 개발자 경험을 제공합니다
@@ -387,7 +387,7 @@ routes (id, from_place_id, to_place_id, mode, duration, distance)
 | 영역 | 기술 선택 | 주요 이유 |
 |------|-------------------|----------------|
 | AI 엔진 | LangChain + GPT-4 | 최고의 추론, 생태계 지원 |
-| 프론트엔드 | Next.js 15 + Tailwind | 현대적, 성능, 훌륭한 개발자 경험 |
+| 프론트엔드 | Next.js 14 + Tailwind | 현대적, 성능, 훌륭한 개발자 경험 |
 | 백엔드 | FastAPI + Python | 비동기 지원, AI 생태계 |
 | 데이터베이스 | Supabase (PostgreSQL) | 관리형, 인증 포함, 무료 티어 |
 | 지도 | Mapbox GL JS | 사용자 정의 가능, 성능 |
