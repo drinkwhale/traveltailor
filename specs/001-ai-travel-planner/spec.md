@@ -158,6 +158,8 @@
 - **FR-019**: 시스템은 예산이 최소 여행 구성 비용보다 낮은 경우, 필요한 최소 예산을 안내해야 합니다.
 
 - **FR-020**: 시스템은 데이터가 부족한 목적지에 대해 경고 메시지를 표시하고, 가능한 범위 내에서 일정을 생성해야 합니다.
+- **FR-021**: AI 일정 생성이 시간 초과(30초)되거나 OpenAI API 호출이 실패한 경우, 규칙 기반 템플릿 일정을 생성해 사용자가 즉시 확인할 수 있도록 해야 합니다.
+- **FR-022**: Google Places, 항공/숙박 추천 API 호출이 정의된 레이트 리밋을 초과하거나 오류를 반환할 때, 사용자에게 지연/재시도 메시지를 제공하고 부분 데이터라도 반환해야 합니다.
 
 ### Key Entities
 
@@ -176,6 +178,18 @@
 - **Accommodation Option**: 추천 숙박 시설 정보. 숙소명, 주소, 가격, 평점, 예약 링크를 포함합니다.
 
 - **User Preference**: 사용자의 여행 선호도. 선호하는 예산 범위, 동행자 유형, 관심사(맛집/관광/휴양 등)를 포함합니다.
+
+## Technical Constraints & External Dependencies
+
+- **프론트엔드 기술 스택**: Next.js 14, React 18 LTS, TypeScript 5.x, Tailwind CSS. Next.js 15/React 19는 안정화 이후 별도 스파이크에서 검토한다.
+- **백엔드 기술 스택**: FastAPI, Python 3.11, SQLAlchemy, Pydantic v2, LangChain(OpenAI GPT-4o). AI 호출은 비동기 태스크 큐와 Redis 캐시로 관리한다.
+- **외부 서비스 계약**:
+  - OpenAI API: 일일 비용 상한과 요청 타임아웃(최대 45초)을 설정하고, 실패 시 `fallback-template` 전략을 적용한다.
+  - Google Places API: 장소 및 경로 데이터용. 쿼터/요금제 검토 후 호출 수를 예측하고, 캐싱 정책을 문서화한다.
+  - 항공편/숙박 검색 API: Skyscanner, Booking.com 등과 제휴 계약 및 지역 규제(한국/일본/EU) 준수 여부가 확인되어야 한다. 계약 완료 전에는 Mock 서비스로 대체한다.
+  - Mapbox Directions/Static API: 지도/경로 시각화. 토큰 순환 및 타일 캐시 전략을 적용한다.
+- **보안/규제**: GDPR/국내 개인정보보호법을 준수하며, Supabase Auth/S3 호환 스토리지에 대한 데이터 암호화와 삭제 워크플로를 정의한다.
+- **운영 제약**: AI 비용은 일일 $50, 월 $1,200 한도를 초과하지 않도록 모니터링하고, 초과 시 자동으로 폴백 모드를 활성화한다.
 
 ## Success Criteria *(mandatory)*
 
