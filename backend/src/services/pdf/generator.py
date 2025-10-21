@@ -232,15 +232,20 @@ class PdfGeneratorService:
         map_image = None
         if markers and self._mapbox is not None:
             try:
-                coordinates = [
-                    (float(place.place.latitude), float(place.place.longitude)) for place in markers
-                ]
-                # Draw route using marker order so the map remains informative even without stored polylines.
-                path: Sequence[tuple[float, float]] | None = coordinates if len(coordinates) > 1 else None
-                image_bytes = await self._mapbox.get_static_map(markers=coordinates, path=path)
-                if image_bytes:
-                    map_image = f"data:image/png;base64,{base64.b64encode(image_bytes).decode('ascii')}"
-            except (MapboxError, ValueError, RuntimeError):
+                coordinates = []
+                for place in markers:
+                    # Skip places without valid coordinates (custom places, missing geocoding, etc.)
+                    if not place.place or place.place.latitude is None or place.place.longitude is None:
+                        continue
+                    coordinates.append((float(place.place.latitude), float(place.place.longitude)))
+
+                if coordinates:
+                    # Draw route using marker order so the map remains informative even without stored polylines.
+                    path: Sequence[tuple[float, float]] | None = coordinates if len(coordinates) > 1 else None
+                    image_bytes = await self._mapbox.get_static_map(markers=coordinates, path=path)
+                    if image_bytes:
+                        map_image = f"data:image/png;base64,{base64.b64encode(image_bytes).decode('ascii')}"
+            except (MapboxError, ValueError, RuntimeError, TypeError, AttributeError):
                 map_image = None
 
         return {
