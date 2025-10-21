@@ -177,29 +177,29 @@
 
 ### 백엔드 - 지도 데이터 API (US2)
 
-- [ ] T070 [P] [US2] 경로 계산 서비스 (Mapbox Directions API 통합) in backend/src/integrations/mapbox.py
-- [ ] T071 [P] [US2] 경로 폴리라인 인코딩 유틸리티 in backend/src/core/geo_utils.py
-- [ ] T072 [US2] 지도 내보내기 URL 생성 서비스 in backend/src/services/exports/map_exporter.py
-- [ ] T073 [US2] GET /v1/exports/map/{planId} 엔드포인트 in backend/src/api/v1/exports.py
+- [x] T070 [P] [US2] 경로 계산 서비스 (Mapbox Directions API 통합) in backend/src/integrations/mapbox.py
+- [x] T071 [P] [US2] 경로 폴리라인 인코딩 유틸리티 in backend/src/core/geo_utils.py
+- [x] T072 [US2] 지도 내보내기 URL 생성 서비스 in backend/src/services/exports/map_exporter.py
+- [x] T073 [US2] GET /v1/exports/map/{planId} 엔드포인트 in backend/src/api/v1/exports.py
 
 ### 프론트엔드 - 지도 시각화 (US2)
 
-- [ ] T074 [US2] Mapbox GL JS 설정 및 초기화 in frontend/src/lib/mapbox.ts
-- [ ] T075 [US2] MapView 컴포넌트 (장소 마커 표시) in frontend/src/components/map/MapView.tsx
-- [ ] T076 [US2] RouteMap 컴포넌트 (경로 라인 표시) in frontend/src/components/map/RouteMap.tsx
-- [ ] T077 [US2] 장소 마커 클릭 시 상세 정보 팝업 in frontend/src/components/map/PlacePopup.tsx
-- [ ] T078 [US2] 경로 정보 표시 (이동 시간, 거리) in frontend/src/components/map/RouteInfo.tsx
+- [x] T074 [US2] Mapbox GL JS 설정 및 초기화 in frontend/src/lib/mapbox.ts
+- [x] T075 [US2] MapView 컴포넌트 (장소 마커 표시) in frontend/src/components/map/MapView.tsx
+- [x] T076 [US2] RouteMap 컴포넌트 (경로 라인 표시) in frontend/src/components/map/RouteMap.tsx
+- [x] T077 [US2] 장소 마커 클릭 시 상세 정보 팝업 in frontend/src/components/map/PlacePopup.tsx
+- [x] T078 [US2] 경로 정보 표시 (이동 시간, 거리) in frontend/src/components/map/RouteInfo.tsx
 
 ### 프론트엔드 - 외부 지도 내보내기 (US2)
 
-- [ ] T079 [P] [US2] 카카오맵 URL 생성 유틸리티 in frontend/src/lib/kakao-map-link.ts
-- [ ] T080 [P] [US2] 구글맵 URL 생성 유틸리티 in frontend/src/lib/google-map-link.ts
-- [ ] T081 [US2] 지도 내보내기 버튼 컴포넌트 in frontend/src/components/map/ExportButtons.tsx
-- [ ] T082 [US2] 디바이스 감지 및 적절한 링크 제공 로직 in frontend/src/lib/device-detector.ts
+- [x] T079 [P] [US2] 카카오맵 URL 생성 유틸리티 in frontend/src/lib/kakao-map-link.ts
+- [x] T080 [P] [US2] 구글맵 URL 생성 유틸리티 in frontend/src/lib/google-map-link.ts
+- [x] T081 [US2] 지도 내보내기 버튼 컴포넌트 in frontend/src/components/map/ExportButtons.tsx
+- [x] T082 [US2] 디바이스 감지 및 적절한 링크 제공 로직 in frontend/src/lib/device-detector.ts
 
 ### 통합 (US2)
 
-- [ ] T083 [US2] 여행 일정 상세 페이지에 지도 뷰 통합 in frontend/src/app/(auth)/plan/[id]/page.tsx
+- [x] T083 [US2] 여행 일정 상세 페이지에 지도 뷰 통합 in frontend/src/app/(auth)/plan/[id]/page.tsx
 
 **체크포인트**: User Story 2 완료 - 여행 일정의 모든 장소와 경로를 지도에서 확인하고 외부 앱으로 내보낼 수 있어야 함
 
