@@ -105,63 +105,63 @@
 
 ### 데이터 모델 (US1)
 
-- [ ] T032 [P] [US1] TravelPlan 모델 생성 in backend/src/models/travel_plan.py
-- [ ] T033 [P] [US1] DailyItinerary 모델 생성 in backend/src/models/daily_itinerary.py
-- [ ] T034 [P] [US1] Place 모델 생성 in backend/src/models/place.py
-- [ ] T035 [P] [US1] ItineraryPlace 모델 생성 in backend/src/models/itinerary_place.py
-- [ ] T036 [P] [US1] Route 모델 생성 in backend/src/models/route.py
-- [ ] T037 [US1] 데이터베이스 마이그레이션 스크립트 작성 (travel_plans, daily_itineraries, places, itinerary_places, routes)
-- [ ] T038 [US1] 마이그레이션 실행 및 검증
+- [x] T032 [P] [US1] TravelPlan 모델 생성 in backend/src/models/travel_plan.py
+- [x] T033 [P] [US1] DailyItinerary 모델 생성 in backend/src/models/daily_itinerary.py
+- [x] T034 [P] [US1] Place 모델 생성 in backend/src/models/place.py
+- [x] T035 [P] [US1] ItineraryPlace 모델 생성 in backend/src/models/itinerary_place.py
+- [x] T036 [P] [US1] Route 모델 생성 in backend/src/models/route.py
+- [x] T037 [US1] 데이터베이스 마이그레이션 스크립트 작성 (travel_plans, daily_itineraries, places, itinerary_places, routes)
+- [x] T038 [US1] 마이그레이션 실행 및 검증
 
 ### Pydantic 스키마 (US1)
 
-- [ ] T039 [P] [US1] TravelPlan 요청/응답 스키마 in backend/src/schemas/travel_plan.py
-- [ ] T040 [P] [US1] Place 스키마 in backend/src/schemas/place.py
-- [ ] T041 [P] [US1] DailyItinerary 스키마 in backend/src/schemas/itinerary.py
+- [x] T039 [P] [US1] TravelPlan 요청/응답 스키마 in backend/src/schemas/travel_plan.py
+- [x] T040 [P] [US1] Place 스키마 in backend/src/schemas/place.py
+- [x] T041 [P] [US1] DailyItinerary 스키마 in backend/src/schemas/itinerary.py
 
 ### AI 여행 계획 서비스 (US1 핵심 로직)
 
-- [ ] T042 [US1] LangChain 프롬프트 템플릿 설계 (토큰 최적화) in backend/src/services/ai/prompts.py
-- [ ] T043 [US1] 사용자 입력 분석 서비스 (선호도 추출) in backend/src/services/ai/preference_analyzer.py
-- [ ] T044 [US1] 예산 할당 로직 (숙박/식사/관광/교통) in backend/src/services/ai/budget_allocator.py
-- [ ] T045 [US1] Google Places API 장소 검색 서비스 in backend/src/integrations/google_maps.py (검색, 상세 조회)
-- [ ] T046 [US1] AI 장소 추천 및 랭킹 로직 in backend/src/services/places/recommender.py
-- [ ] T047 [US1] 경로 최적화 서비스 (방문 순서 계산) in backend/src/services/routes/optimizer.py
-- [ ] T048 [US1] 시간대별 일정 생성 서비스 in backend/src/services/ai/timeline_generator.py
-- [ ] T049a [US1] AI 응답 캐싱 서비스 (Redis 기반, SHA256 해싱, 7일 TTL, 30-40% 비용 절감) in backend/src/services/ai/cache.py
-- [ ] T049 [US1] 통합 여행 계획 생성 서비스 in backend/src/services/ai/planner.py (T042~T049a 통합)
+- [x] T042 [US1] LangChain 프롬프트 템플릿 설계 (토큰 최적화) in backend/src/services/ai/prompts.py
+- [x] T043 [US1] 사용자 입력 분석 서비스 (선호도 추출) in backend/src/services/ai/preference_analyzer.py
+- [x] T044 [US1] 예산 할당 로직 (숙박/식사/관광/교통) in backend/src/services/ai/budget_allocator.py
+- [x] T045 [US1] Google Places API 장소 검색 서비스 in backend/src/integrations/google_maps.py (검색, 상세 조회)
+- [x] T046 [US1] AI 장소 추천 및 랭킹 로직 in backend/src/services/places/recommender.py
+- [x] T047 [US1] 경로 최적화 서비스 (방문 순서 계산) in backend/src/services/routes/optimizer.py
+- [x] T048 [US1] 시간대별 일정 생성 서비스 in backend/src/services/ai/timeline_generator.py
+- [x] T049a [US1] AI 응답 캐싱 서비스 (Redis 기반, SHA256 해싱, 7일 TTL, 30-40% 비용 절감) in backend/src/services/ai/cache.py
+- [x] T049 [US1] 통합 여행 계획 생성 서비스 in backend/src/services/ai/planner.py (T042~T049a 통합)
 
 ### API 엔드포인트 (US1)
 
-- [ ] T050 [US1] POST /v1/travel-plans 엔드포인트 구현 (비동기 생성 시작) in backend/src/api/v1/travel_plans.py
-- [ ] T051 [US1] GET /v1/travel-plans/{planId}/status 엔드포인트 (생성 상태 조회) in backend/src/api/v1/travel_plans.py
-- [ ] T052 [US1] GET /v1/travel-plans/{planId} 엔드포인트 (상세 조회) in backend/src/api/v1/travel_plans.py
-- [ ] T053 [P] [US1] GET /v1/travel-plans 엔드포인트 (목록 조회) in backend/src/api/v1/travel_plans.py
-- [ ] T054 [P] [US1] PATCH /v1/travel-plans/{planId} 엔드포인트 (수정) in backend/src/api/v1/travel_plans.py
-- [ ] T055 [P] [US1] DELETE /v1/travel-plans/{planId} 엔드포인트 (삭제) in backend/src/api/v1/travel_plans.py
+- [x] T050 [US1] POST /v1/travel-plans 엔드포인트 구현 (비동기 생성 시작) in backend/src/api/v1/travel_plans.py
+- [x] T051 [US1] GET /v1/travel-plans/{planId}/status 엔드포인트 (생성 상태 조회) in backend/src/api/v1/travel_plans.py
+- [x] T052 [US1] GET /v1/travel-plans/{planId} 엔드포인트 (상세 조회) in backend/src/api/v1/travel_plans.py
+- [x] T053 [P] [US1] GET /v1/travel-plans 엔드포인트 (목록 조회) in backend/src/api/v1/travel_plans.py
+- [x] T054 [P] [US1] PATCH /v1/travel-plans/{planId} 엔드포인트 (수정) in backend/src/api/v1/travel_plans.py
+- [x] T055 [P] [US1] DELETE /v1/travel-plans/{planId} 엔드포인트 (삭제) in backend/src/api/v1/travel_plans.py
 
 ### 프론트엔드 - 여행 계획 생성 UI (US1)
 
-- [ ] T056 [P] [US1] TravelPlan TypeScript 타입 정의 in shared/types/travel-plan.ts
-- [ ] T057 [US1] 여행 계획 API 클라이언트 서비스 in frontend/src/services/travel-plans.ts
-- [ ] T058 [US1] 여행 입력 폼 컴포넌트 in frontend/src/components/forms/TravelPlanForm.tsx
-- [ ] T059 [US1] 여행 생성 페이지 in frontend/src/app/(auth)/create/page.tsx
-- [ ] T060 [US1] 생성 진행 상태 표시 컴포넌트 in frontend/src/components/ui/ProgressIndicator.tsx
-- [ ] T061 [US1] useTravelPlan 커스텀 훅 (생성, 조회, 상태 폴링) in frontend/src/hooks/useTravelPlan.ts
+- [x] T056 [P] [US1] TravelPlan TypeScript 타입 정의 in shared/types/travel-plan.ts
+- [x] T057 [US1] 여행 계획 API 클라이언트 서비스 in frontend/src/services/travel-plans.ts
+- [x] T058 [US1] 여행 입력 폼 컴포넌트 in frontend/src/components/forms/TravelPlanForm.tsx
+- [x] T059 [US1] 여행 생성 페이지 in frontend/src/app/(auth)/create/page.tsx
+- [x] T060 [US1] 생성 진행 상태 표시 컴포넌트 in frontend/src/components/ui/ProgressIndicator.tsx
+- [x] T061 [US1] useTravelPlan 커스텀 훅 (생성, 조회, 상태 폴링) in frontend/src/hooks/useTravelPlan.ts
 
 ### 프론트엔드 - 여행 일정 표시 UI (US1)
 
-- [ ] T062 [US1] 일정 상세 보기 페이지 in frontend/src/app/(auth)/plan/[id]/page.tsx
-- [ ] T063 [P] [US1] 일일 타임라인 컴포넌트 in frontend/src/components/timeline/DailyTimeline.tsx
-- [ ] T064 [P] [US1] 장소 카드 컴포넌트 in frontend/src/components/timeline/PlaceCard.tsx
-- [ ] T065 [P] [US1] 예산 요약 컴포넌트 in frontend/src/components/budget/BudgetSummary.tsx
+- [x] T062 [US1] 일정 상세 보기 페이지 in frontend/src/app/(auth)/plan/[id]/page.tsx
+- [x] T063 [P] [US1] 일일 타임라인 컴포넌트 in frontend/src/components/timeline/DailyTimeline.tsx
+- [x] T064 [P] [US1] 장소 카드 컴포넌트 in frontend/src/components/timeline/PlaceCard.tsx
+- [x] T065 [P] [US1] 예산 요약 컴포넌트 in frontend/src/components/budget/BudgetSummary.tsx
 
 ### 에러 처리 및 검증 (US1)
 
-- [ ] T066 [P] [US1] 입력 데이터 검증 (필수 필드, 날짜 유효성) in backend/src/schemas/travel_plan.py
-- [ ] T067 [P] [US1] 예산 부족 경고 로직 in backend/src/services/ai/budget_allocator.py
-- [ ] T068 [P] [US1] 목적지 데이터 부족 경고 in backend/src/services/places/recommender.py
-- [ ] T069 [US1] 프론트엔드 에러 핸들링 및 사용자 피드백 in frontend/src/components/forms/TravelPlanForm.tsx
+- [x] T066 [P] [US1] 입력 데이터 검증 (필수 필드, 날짜 유효성) in backend/src/schemas/travel_plan.py
+- [x] T067 [P] [US1] 예산 부족 경고 로직 in backend/src/services/ai/budget_allocator.py
+- [x] T068 [P] [US1] 목적지 데이터 부족 경고 in backend/src/services/places/recommender.py
+- [x] T069 [US1] 프론트엔드 에러 핸들링 및 사용자 피드백 in frontend/src/components/forms/TravelPlanForm.tsx
 
 **체크포인트**: User Story 1 완료 - 사용자가 여행 조건을 입력하여 완전한 AI 생성 일정을 받을 수 있어야 함
 

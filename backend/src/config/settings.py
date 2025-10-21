@@ -28,6 +28,7 @@ class Settings(BaseSettings):
 
     # AI Services
     OPENAI_API_KEY: str
+    OPENAI_MODEL: str = "gpt-4o-mini"
     LANGCHAIN_API_KEY: str = ""
     LANGCHAIN_TRACING_V2: bool = False
 
