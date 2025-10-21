@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useRouter } from 'next/navigation'
 
 import { BudgetSummary } from '@/components/budget/BudgetSummary'
@@ -8,8 +8,13 @@ import { DailyTimeline } from '@/components/timeline/DailyTimeline'
 import { ProgressIndicator } from '@/components/ui/ProgressIndicator'
 import { ExportButtons } from '@/components/map/ExportButtons'
 import { RouteMap } from '@/components/map/RouteMap'
+import { RecommendationsSection } from '@/components/recommendations/RecommendationsSection'
+import { PdfDownloadButton } from '@/components/exports/PdfDownloadButton'
+import { PdfPreview } from '@/components/pdf/PdfPreview'
 import { useMapExport } from '@/hooks/useMapExport'
 import { useTravelPlan } from '@/hooks/useTravelPlan'
+import { useRecommendations } from '@/hooks/useRecommendations'
+import type { PdfExportPayload } from '@shared-types/pdf'
 
 interface PlanDetailPageProps {
   params: {
@@ -23,7 +28,18 @@ export default function PlanDetailPage({ params }: PlanDetailPageProps) {
   const { data: mapExport, days: mapDays, isLoading: isMapLoading, error: mapError } = useMapExport(
     plan?.id
   )
+  const {
+    flights,
+    accommodations,
+    isLoading: isRecommendationsLoading,
+    error: recommendationsError,
+    hasFetched: hasRecommendationFetched,
+    refresh: refreshRecommendations,
+  } = useRecommendations(plan?.id)
   const [selectedDayIndex, setSelectedDayIndex] = useState(0)
+  const [pdfExport, setPdfExport] = useState<PdfExportPayload | undefined>(undefined)
+  const [isPdfGenerating, setIsPdfGenerating] = useState(false)
+  const [pdfError, setPdfError] = useState<string | undefined>(undefined)
 
   useEffect(() => {
     if (!params.id) {
@@ -32,6 +48,11 @@ export default function PlanDetailPage({ params }: PlanDetailPageProps) {
     }
     fetchPlan(params.id).catch(() => undefined)
   }, [params.id, fetchPlan, router])
+
+  useEffect(() => {
+    setPdfExport(undefined)
+    setPdfError(undefined)
+  }, [plan?.id])
 
   useEffect(() => {
     if (!mapDays.length) {
@@ -47,6 +68,22 @@ export default function PlanDetailPage({ params }: PlanDetailPageProps) {
   }, [mapDays])
 
   const selectedDay = useMemo(() => mapDays[selectedDayIndex], [mapDays, selectedDayIndex])
+
+  const handlePdfGenerated = useCallback((payload: PdfExportPayload) => {
+    setPdfExport(payload)
+    setPdfError(undefined)
+  }, [])
+
+  const handlePdfError = useCallback((message: string) => {
+    setPdfError(message)
+  }, [])
+
+  const handlePdfGeneratingChange = useCallback((value: boolean) => {
+    setIsPdfGenerating(value)
+    if (value) {
+      setPdfError(undefined)
+    }
+  }, [])
 
   if (isLoading && !plan) {
     return (
@@ -159,7 +196,36 @@ export default function PlanDetailPage({ params }: PlanDetailPageProps) {
         )}
       </section>
 
+      <section className="flex flex-col gap-4 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+        <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
+          <div className="space-y-1">
+            <h2 className="text-lg font-semibold text-slate-900">여행 일정을 PDF로 저장하기</h2>
+            <p className="text-sm text-slate-500">
+              서식이 적용된 일정표를 다운로드하여 오프라인에서도 확인하거나 공유할 수 있습니다.
+            </p>
+          </div>
+          <PdfDownloadButton
+            planId={plan.id}
+            planTitle={plan.title}
+            onGenerated={handlePdfGenerated}
+            onError={handlePdfError}
+            onGeneratingChange={handlePdfGeneratingChange}
+          />
+        </div>
+
+        <PdfPreview exportData={pdfExport} isLoading={isPdfGenerating} error={pdfError} />
+      </section>
+
       {renderMapSection()}
+
+      <RecommendationsSection
+        flights={flights}
+        accommodations={accommodations}
+        isLoading={isRecommendationsLoading}
+        error={recommendationsError}
+        hasFetched={hasRecommendationFetched}
+        onRefresh={refreshRecommendations}
+      />
 
       <div className="grid gap-6 lg:grid-cols-[260px,1fr]">
         <BudgetSummary

@@ -271,3 +271,5 @@ coverage/
 # Specify framework
 .specify/temp/
 .specify/cache/
+
+.openai/

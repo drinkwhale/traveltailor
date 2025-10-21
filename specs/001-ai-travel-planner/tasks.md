@@ -215,23 +215,23 @@
 
 ### 백엔드 - PDF 생성 서비스 (US3)
 
-- [ ] T084 [US3] Puppeteer 설정 및 브라우저 인스턴스 풀 in backend/src/services/pdf/__init__.py
-- [ ] T085 [US3] HTML 템플릿 설계 (Tailwind CSS 사용) in backend/src/services/pdf/templates/itinerary.html
-- [ ] T086 [US3] Mapbox Static API 통합 (지도 이미지 생성) in backend/src/integrations/mapbox.py
-- [ ] T087 [US3] PDF 생성 로직 (HTML → PDF 변환) in backend/src/services/pdf/generator.py
-- [ ] T088 [US3] PDF 파일 저장 및 URL 생성 (Supabase Storage) in backend/src/services/pdf/storage.py
-- [ ] T089 [US3] GET /v1/exports/pdf/{planId} 엔드포인트 in backend/src/api/v1/exports.py
+- [x] T084 [US3] Puppeteer 설정 및 브라우저 인스턴스 풀 in backend/src/services/pdf/__init__.py
+- [x] T085 [US3] HTML 템플릿 설계 (Tailwind CSS 사용) in backend/src/services/pdf/templates/itinerary.html
+- [x] T086 [US3] Mapbox Static API 통합 (지도 이미지 생성) in backend/src/integrations/mapbox.py
+- [x] T087 [US3] PDF 생성 로직 (HTML → PDF 변환) in backend/src/services/pdf/generator.py
+- [x] T088 [US3] PDF 파일 저장 및 URL 생성 (Supabase Storage) in backend/src/services/pdf/storage.py
+- [x] T089 [US3] GET /v1/exports/pdf/{planId} 엔드포인트 in backend/src/api/v1/exports.py
 
 ### 프론트엔드 - PDF 다운로드 UI (US3)
 
-- [ ] T090 [US3] PDF 다운로드 버튼 컴포넌트 in frontend/src/components/exports/PdfDownloadButton.tsx
-- [ ] T091 [US3] PDF 미리보기 컴포넌트 (선택사항) in frontend/src/components/pdf/PdfPreview.tsx
-- [ ] T092 [US3] 여행 일정 상세 페이지에 PDF 다운로드 기능 통합 in frontend/src/app/(auth)/plan/[id]/page.tsx
+- [x] T090 [US3] PDF 다운로드 버튼 컴포넌트 in frontend/src/components/exports/PdfDownloadButton.tsx
+- [x] T091 [US3] PDF 미리보기 컴포넌트 (선택사항) in frontend/src/components/pdf/PdfPreview.tsx
+- [x] T092 [US3] 여행 일정 상세 페이지에 PDF 다운로드 기능 통합 in frontend/src/app/(auth)/plan/[id]/page.tsx
 
 ### 브랜딩 및 스타일링 (US3)
 
-- [ ] T093 [P] [US3] TravelTailor 로고 및 브랜드 에셋 추가 in backend/src/services/pdf/assets/
-- [ ] T094 [P] [US3] PDF 스타일 시트 작성 (Tailwind CSS) in backend/src/services/pdf/templates/styles.css
+- [x] T093 [P] [US3] TravelTailor 로고 및 브랜드 에셋 추가 in backend/src/services/pdf/assets/
+- [x] T094 [P] [US3] PDF 스타일 시트 작성 (Tailwind CSS) in backend/src/services/pdf/templates/styles.css
 
 **체크포인트**: User Story 3 완료 - 여행 일정을 브랜딩된 PDF로 다운로드하여 오프라인에서도 확인 가능해야 함
 
@@ -247,38 +247,38 @@
 
 ### 데이터 모델 (US4)
 
-- [ ] T095 [P] [US4] FlightOption 모델 생성 in backend/src/models/flight_option.py
-- [ ] T096 [P] [US4] AccommodationOption 모델 생성 in backend/src/models/accommodation_option.py
-- [ ] T097 [US4] 데이터베이스 마이그레이션 스크립트 작성 (flight_options, accommodation_options)
+- [x] T095 [P] [US4] FlightOption 모델 생성 in backend/src/models/flight_option.py
+- [x] T096 [P] [US4] AccommodationOption 모델 생성 in backend/src/models/accommodation_option.py
+- [x] T097 [US4] 데이터베이스 마이그레이션 스크립트 작성 (flight_options, accommodation_options)
 
 ### 외부 API 통합 (US4)
 
-- [ ] T098 [P] [US4] Skyscanner API 클라이언트 in backend/src/integrations/skyscanner.py
-- [ ] T099 [P] [US4] Booking.com 제휴 링크 생성 in backend/src/integrations/booking.py
-- [ ] T100 [P] [US4] Agoda API 클라이언트 in backend/src/integrations/agoda.py
+- [x] T098 [P] [US4] Skyscanner API 클라이언트 in backend/src/integrations/skyscanner.py
+- [x] T099 [P] [US4] Booking.com 제휴 링크 생성 in backend/src/integrations/booking.py
+- [x] T100 [P] [US4] Agoda API 클라이언트 in backend/src/integrations/agoda.py
 
 ### 추천 서비스 (US4)
 
-- [ ] T101 [US4] 항공편 검색 및 추천 서비스 in backend/src/services/recommendations/flight_recommender.py
-- [ ] T102 [US4] 숙박 검색 및 추천 서비스 in backend/src/services/recommendations/accommodation_recommender.py
-- [ ] T103 [US4] 제휴 링크 추적 유틸리티 in backend/src/core/affiliate_tracker.py
+- [x] T101 [US4] 항공편 검색 및 추천 서비스 in backend/src/services/recommendations/flight_recommender.py
+- [x] T102 [US4] 숙박 검색 및 추천 서비스 in backend/src/services/recommendations/accommodation_recommender.py
+- [x] T103 [US4] 제휴 링크 추적 유틸리티 in backend/src/core/affiliate_tracker.py
 
 ### API 엔드포인트 (US4)
 
-- [ ] T104 [P] [US4] GET /v1/recommendations/flights/{planId} 엔드포인트 in backend/src/api/v1/recommendations.py
-- [ ] T105 [P] [US4] GET /v1/recommendations/accommodations/{planId} 엔드포인트 in backend/src/api/v1/recommendations.py
+- [x] T104 [P] [US4] GET /v1/recommendations/flights/{planId} 엔드포인트 in backend/src/api/v1/recommendations.py
+- [x] T105 [P] [US4] GET /v1/recommendations/accommodations/{planId} 엔드포인트 in backend/src/api/v1/recommendations.py
 
 ### 프론트엔드 UI (US4)
 
-- [ ] T106 [US4] 항공편 추천 카드 컴포넌트 in frontend/src/components/recommendations/FlightCard.tsx
-- [ ] T107 [US4] 숙박 추천 카드 컴포넌트 in frontend/src/components/recommendations/AccommodationCard.tsx
-- [ ] T108 [US4] 추천 섹션 컴포넌트 in frontend/src/components/recommendations/RecommendationsSection.tsx
-- [ ] T109 [US4] 여행 일정 상세 페이지에 추천 섹션 통합 in frontend/src/app/(auth)/plan/[id]/page.tsx
+- [x] T106 [US4] 항공편 추천 카드 컴포넌트 in frontend/src/components/recommendations/FlightCard.tsx
+- [x] T107 [US4] 숙박 추천 카드 컴포넌트 in frontend/src/components/recommendations/AccommodationCard.tsx
+- [x] T108 [US4] 추천 섹션 컴포넌트 in frontend/src/components/recommendations/RecommendationsSection.tsx
+- [x] T109 [US4] 여행 일정 상세 페이지에 추천 섹션 통합 in frontend/src/app/(auth)/plan/[id]/page.tsx
 
 ### 에러 처리 (US4)
 
-- [ ] T110 [US4] 외부 API 장애 시 그레이스풀 디그레이데이션 in backend/src/services/recommendations/
-- [ ] T111 [US4] 예약 링크 unavailable 시 사용자 피드백 in frontend/src/components/recommendations/
+- [x] T110 [US4] 외부 API 장애 시 그레이스풀 디그레이데이션 in backend/src/services/recommendations/
+- [x] T111 [US4] 예약 링크 unavailable 시 사용자 피드백 in frontend/src/components/recommendations/
 
 **체크포인트**: User Story 4 완료 - 여행 일정에 항공편 및 숙박 추천 옵션과 예약 링크가 포함되어야 함
 

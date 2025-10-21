@@ -9,6 +9,8 @@ from .daily_itinerary import DailyItinerary
 from .place import Place
 from .itinerary_place import ItineraryPlace
 from .route import Route
+from .flight_option import FlightOption
+from .accommodation_option import AccommodationOption
 
 __all__ = [
     "User",
@@ -18,4 +20,6 @@ __all__ = [
     "Place",
     "ItineraryPlace",
     "Route",
+    "FlightOption",
+    "AccommodationOption",
 ]

@@ -4,7 +4,7 @@ Environment variables를 통해 설정 관리
 """
 
 from pydantic_settings import BaseSettings
-from typing import List
+from typing import List, Optional
 
 
 class Settings(BaseSettings):
@@ -36,6 +36,8 @@ class Settings(BaseSettings):
     GOOGLE_MAPS_API_KEY: str
     MAPBOX_ACCESS_TOKEN: str
     SKYSCANNER_API_KEY: str = ""
+    BOOKING_COM_AFFILIATE_ID: str = ""
+    AGODA_API_KEY: str = ""
 
     # Task Queue
     REDIS_URL: str = "redis://localhost:6379/0"
@@ -45,6 +47,17 @@ class Settings(BaseSettings):
 
     # CORS
     ALLOWED_ORIGINS: List[str] = ["http://localhost:3000", "http://localhost:8000"]
+
+    # PDF Export
+    PDF_POOL_SIZE: int = 2
+    PDF_RENDER_TIMEOUT: int = 60  # seconds
+    PDF_BUCKET_NAME: str = "travel-plan-pdfs"
+    PDF_SIGNED_URL_TTL: int = 3600  # seconds
+    PDF_BRAND_NAME: str = "TravelTailor"
+    PDF_INCLUDE_PREVIEW: bool = True
+    PDF_TEMPLATE_LOCALE: str = "ko-KR"
+    PDF_STORAGE_FOLDER: str = "itineraries"
+    PDF_PUBLIC_BASE_URL: Optional[str] = None
 
     # Logging
     LOG_LEVEL: str = "INFO"

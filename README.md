@@ -19,7 +19,7 @@
    cp backend/.env.example backend/.env
    cp frontend/.env.local.example frontend/.env.local
    ```
-   필수 값: Supabase(PostgreSQL) URL/키, OpenAI API 키, Google Places/Mapbox/Skyscanner API 키, 백엔드/프론트엔드 도메인.
+   필수 값: Supabase(PostgreSQL) URL/키, OpenAI API 키, Google Places/Mapbox/Skyscanner API 키, Booking.com 제휴 ID, Agoda API 키, 백엔드/프론트엔드 도메인.
 3. **백엔드 의존성 설치 및 서버 실행**
    ```bash
    cd backend

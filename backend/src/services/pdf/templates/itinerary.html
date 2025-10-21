@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <title>{{ brand.name }} 여행 일정표 - {{ plan.title }}</title>
+    <style>
+      {{ styles }}
+    </style>
+  </head>
+  <body>
+    <main class="wrapper">
+      <section class="section">
+        <header class="header">
+          <div class="brand">
+            {% if brand.logo_data_uri %}
+            <img src="{{ brand.logo_data_uri }}" alt="{{ brand.name }} 로고" class="brand-logo" />
+            {% endif %}
+            <div>
+              <h1 class="plan-title">{{ plan.title }}</h1>
+              <p class="subtext">{{ plan.destination }}, {{ plan.country }}</p>
+              <p class="subtext">
+                {{ plan.start_date }} ~ {{ plan.end_date }} · {{ plan.total_days }}일, {{ plan.total_nights }}박 ·
+                동행 {{ plan.traveler_count }}명 ({{ plan.traveler_type }})
+              </p>
+            </div>
+          </div>
+          <div class="subtext">
+            생성 일시: {{ generated_at.astimezone().strftime('%Y-%m-%d %H:%M') }}
+          </div>
+        </header>
+
+        <div class="meta-grid">
+          <div class="meta-item">
+            <div class="meta-label">총 예산</div>
+            <div class="meta-value">
+              {{ "{:,.0f}".format(plan.budget_total) }} KRW
+            </div>
+          </div>
+          <div class="meta-item">
+            <div class="meta-label">AI 모델</div>
+            <div class="meta-value">{{ plan.ai_model_version or 'v1' }}</div>
+          </div>
+          <div class="meta-item">
+            <div class="meta-label">플랜 ID</div>
+            <div class="meta-value">{{ plan.id }}</div>
+          </div>
+        </div>
+      </section>
+
+      {% if plan.budget_breakdown %}
+      <section class="section">
+        <h2 class="section-title">예산 배분</h2>
+        <table class="table">
+          <thead>
+            <tr>
+              <th>카테고리</th>
+              <th>금액</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for key, value in plan.budget_breakdown.items() %}
+            <tr>
+              <td>{{ key }}</td>
+              <td>{{ "{:,.0f}".format(value) }} KRW</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </section>
+      {% endif %}
+
+      {% for day in plan.days %}
+      <section class="section">
+        <div class="day-header">
+          <h2 class="day-title">Day {{ day.day_number }} · {{ day.date }}</h2>
+          {% if day.theme %}
+          <span class="day-theme">{{ day.theme }}</span>
+          {% endif %}
+        </div>
+
+        {% if day.map_image %}
+        <img
+          src="{{ day.map_image }}"
+          alt="Day {{ day.day_number }} 지도"
+          class="map-image"
+        />
+        {% endif %}
+
+        {% for place in day.places %}
+        <article class="place-card">
+          <div class="place-header">
+            <div>
+              <span class="visit-order">#{{ place.visit_order }}</span>
+              <h3 class="place-name">{{ place.name }}</h3>
+            </div>
+            <div class="place-meta">
+              {% if place.visit_time %}<span class="tag">{{ place.visit_time }}</span>{% endif %}
+              {% if place.duration_label %}<span class="tag">{{ place.duration_label }}</span>{% endif %}
+              {% if place.estimated_cost_label %}<span class="tag">예상비용 {{ place.estimated_cost_label }}</span>{% endif %}
+              {% if place.category %}<span class="tag">{{ place.category }}</span>{% endif %}
+            </div>
+          </div>
+          {% if place.address %}
+          <p class="subtext">{{ place.address }}</p>
+          {% endif %}
+          {% if place.description %}
+          <p class="place-description">{{ place.description }}</p>
+          {% endif %}
+        </article>
+        {% endfor %}
+
+        {% if day.routes %}
+        <div class="routes">
+          <h3 class="section-title">이동 경로</h3>
+          {% for route in day.routes %}
+          <div class="route-item">
+            {{ route.transport_label }}
+            · {{ route.from_name }} → {{ route.to_name }}
+            {% if route.duration_label %} · {{ route.duration_label }}{% endif %}
+            {% if route.distance_label %} · {{ route.distance_label }}{% endif %}
+            {% if route.estimated_cost_label %} · {{ route.estimated_cost_label }}{% endif %}
+            {% if route.instructions %}
+            <ul class="route-instructions">
+              {% for note in route.instructions %}
+              <li>{{ note }}</li>
+              {% endfor %}
+            </ul>
+            {% endif %}
+          </div>
+          {% endfor %}
+        </div>
+        {% endif %}
+      </section>
+      {% endfor %}
+
+      {% if plan.flights %}
+      <section class="section">
+        <h2 class="section-title">추천 항공권</h2>
+        <table class="table">
+          <thead>
+            <tr>
+              <th>항공사 / 편명</th>
+              <th>시간</th>
+              <th>소요</th>
+              <th>경유</th>
+              <th>좌석</th>
+              <th>가격</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for flight in plan.flights %}
+            <tr>
+              <td>{{ flight.carrier }} {{ flight.flight_number }}</td>
+              <td>{{ flight.departure_airport }} {{ flight.departure_time.strftime('%m/%d %H:%M') }} → {{ flight.arrival_airport }} {{ flight.arrival_time.strftime('%m/%d %H:%M') }}</td>
+              <td>{{ flight.duration_label or '-' }}</td>
+              <td>{{ flight.stops }}</td>
+              <td>{{ flight.seat_class or '-' }}</td>
+              <td>{{ flight.price_label or '-' }}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </section>
+      {% endif %}
+
+      {% if plan.accommodations %}
+      <section class="section">
+        <h2 class="section-title">추천 숙소</h2>
+        <table class="table">
+          <thead>
+            <tr>
+              <th>숙소명</th>
+              <th>체크인</th>
+              <th>체크아웃</th>
+              <th>숙박 수</th>
+              <th>평점</th>
+              <th>가격</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for hotel in plan.accommodations %}
+            <tr>
+              <td>{{ hotel.name }}</td>
+              <td>{{ hotel.check_in_date or '-' }}</td>
+              <td>{{ hotel.check_out_date or '-' }}</td>
+              <td>{{ hotel.nights or '-' }}</td>
+              <td>
+                {% if hotel.rating %}
+                {{ "{:.1f}".format(hotel.rating) }}
+                {% if hotel.review_count %}({{ hotel.review_count }}){% endif %}
+                {% else %}
+                -
+                {% endif %}
+              </td>
+              <td>{{ hotel.price_label or '-' }}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </section>
+      {% endif %}
+
+      <footer class="footer">
+        {{ brand.name }} · 여행의 시작을 디자인하다 · https://traveltailor.app
+      </footer>
+    </main>
+  </body>
+</html>
