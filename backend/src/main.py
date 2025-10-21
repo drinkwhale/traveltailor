@@ -10,6 +10,7 @@ from .config.settings import settings
 from .config.database import init_db, close_db
 from .api.v1 import auth, exports, recommendations, travel_plans
 from .metrics.ai_pipeline import register_metrics
+from .services.pdf import shutdown_pdf_renderer
 
 
 @asynccontextmanager
@@ -19,6 +20,7 @@ async def lifespan(app: FastAPI):
     await init_db()
     yield
     # Shutdown
+    await shutdown_pdf_renderer()
     await close_db()
 
 

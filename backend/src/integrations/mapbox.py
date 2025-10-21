@@ -8,10 +8,12 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from typing import Any, Sequence
+from urllib.parse import quote
 
 import httpx
 
 from ..config import settings
+from ..core.geo_utils import encode_polyline
 
 
 class MapboxError(Exception):
@@ -137,3 +139,68 @@ def get_mapbox_client() -> MapboxClient:
     if _mapbox_client is None:
         _mapbox_client = MapboxClient()
     return _mapbox_client
+
+
+class MapboxStaticClient:
+    """Async client for Mapbox Static Images API."""
+
+    _BASE_URL = "https://api.mapbox.com/styles/v1"
+
+    def __init__(self, timeout: float = 30.0) -> None:
+        token = settings.MAPBOX_ACCESS_TOKEN
+        if not token:
+            raise ValueError("MAPBOX_ACCESS_TOKEN is not configured.")
+        self._token = token
+        self._client = httpx.AsyncClient(base_url=self._BASE_URL, timeout=timeout)
+
+    async def close(self) -> None:
+        await self._client.aclose()
+
+    async def get_static_map(
+        self,
+        *,
+        markers: Sequence[tuple[float, float]],
+        path: Sequence[tuple[float, float]] | None = None,
+        style: str = "light-v11",
+        width: int = 1280,
+        height: int = 720,
+    ) -> bytes:
+        """Return a rendered static map image for the supplied markers/path."""
+        overlays: list[str] = []
+        for index, (lat, lon) in enumerate(markers, start=1):
+            overlays.append(
+                quote(f"pin-s-{index}+285A98({lon:.5f},{lat:.5f})", safe="(),+")
+            )
+        if path:
+            polyline = encode_polyline(path)
+            overlays.append(quote(f"path-4+1B9AAA({polyline})", safe="(),+"))
+
+        overlay_segment = ",".join(overlays) if overlays else ""
+        endpoint = f"/mapbox/{style}/static/"
+        if overlay_segment:
+            endpoint += f"{overlay_segment}/"
+        endpoint += f"auto/{width}x{height}@2x"
+
+        params: dict[str, Any] = {
+            "access_token": self._token,
+        }
+
+        try:
+            response = await self._client.get(endpoint, params=params)
+            response.raise_for_status()
+        except httpx.HTTPStatusError as exc:  # pragma: no cover - thin wrapper
+            raise MapboxError(f"Mapbox static image request failed: {exc}") from exc
+        except httpx.RequestError as exc:  # pragma: no cover - network failures
+            raise MapboxError(f"Mapbox static image network error: {exc}") from exc
+        return response.content
+
+
+_mapbox_static_client: MapboxStaticClient | None = None
+
+
+def get_mapbox_static_client() -> MapboxStaticClient:
+    """Return a singleton Mapbox static image client."""
+    global _mapbox_static_client
+    if _mapbox_static_client is None:
+        _mapbox_static_client = MapboxStaticClient()
+    return _mapbox_static_client

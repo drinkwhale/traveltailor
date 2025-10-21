@@ -1,0 +1,221 @@
+:root {
+  color-scheme: light;
+  font-family: 'Pretendard', 'Inter', 'Spoqa Han Sans', 'Apple SD Gothic Neo', sans-serif;
+  font-size: 12px;
+  line-height: 1.65;
+  color: #0f172a;
+}
+
+@page {
+  size: A4;
+  margin: 25mm 15mm 20mm 15mm;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  background-color: #f8fafc;
+}
+
+.wrapper {
+  padding: 0;
+  margin: 0;
+}
+
+.section {
+  background-color: #ffffff;
+  border-radius: 12px;
+  border: 1px solid #e2e8f0;
+  padding: 18px 20px;
+  margin-bottom: 16px;
+  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.06);
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.brand-logo {
+  height: 36px;
+}
+
+.plan-title {
+  font-size: 24px;
+  font-weight: 700;
+  margin: 0;
+  color: #0f172a;
+}
+
+.subtext {
+  font-size: 13px;
+  color: #475569;
+  margin: 2px 0 0;
+}
+
+.meta-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.meta-item {
+  background-color: #f1f5f9;
+  border-radius: 10px;
+  padding: 12px;
+}
+
+.meta-label {
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  font-weight: 600;
+  color: #64748b;
+  text-transform: uppercase;
+}
+
+.meta-value {
+  margin-top: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #1e293b;
+}
+
+.day-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 12px;
+}
+
+.day-title {
+  font-size: 18px;
+  font-weight: 700;
+  margin: 0;
+  color: #0f172a;
+}
+
+.day-theme {
+  font-size: 13px;
+  color: #2563eb;
+  font-weight: 600;
+}
+
+.map-image {
+  width: 100%;
+  border-radius: 10px;
+  border: 1px solid #cbd5f5;
+  margin-bottom: 14px;
+}
+
+.place-card {
+  border-radius: 10px;
+  border: 1px solid #e2e8f0;
+  padding: 12px 14px;
+  margin-bottom: 10px;
+  background-color: #fdfdfd;
+}
+
+.place-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}
+
+.place-name {
+  font-size: 15px;
+  font-weight: 700;
+  color: #1e293b;
+  margin: 0;
+}
+
+.visit-order {
+  font-size: 12px;
+  font-weight: 600;
+  color: #6366f1;
+}
+
+.place-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 8px 0;
+  color: #475569;
+  font-size: 12px;
+}
+
+.tag {
+  border-radius: 999px;
+  background-color: #e0e7ff;
+  color: #3730a3;
+  padding: 2px 8px;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.place-description {
+  font-size: 12px;
+  color: #334155;
+  margin: 0;
+}
+
+.routes {
+  margin-top: 10px;
+  border-top: 1px dashed #e2e8f0;
+  padding-top: 10px;
+}
+
+.route-item {
+  font-size: 12px;
+  color: #1e293b;
+  margin-bottom: 6px;
+}
+
+.route-instructions {
+  margin: 4px 0 0;
+  padding-left: 18px;
+  color: #475569;
+}
+
+.section-title {
+  font-size: 16px;
+  font-weight: 700;
+  margin: 0 0 10px;
+  color: #0f172a;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12px;
+}
+
+.table th,
+.table td {
+  text-align: left;
+  padding: 8px 10px;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.table th {
+  background-color: #f1f5f9;
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: #475569;
+}
+
+.footer {
+  margin-top: 20px;
+  text-align: center;
+  font-size: 11px;
+  color: #94a3b8;
+}

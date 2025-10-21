@@ -215,23 +215,23 @@
 
 ### 백엔드 - PDF 생성 서비스 (US3)
 
-- [ ] T084 [US3] Puppeteer 설정 및 브라우저 인스턴스 풀 in backend/src/services/pdf/__init__.py
-- [ ] T085 [US3] HTML 템플릿 설계 (Tailwind CSS 사용) in backend/src/services/pdf/templates/itinerary.html
-- [ ] T086 [US3] Mapbox Static API 통합 (지도 이미지 생성) in backend/src/integrations/mapbox.py
-- [ ] T087 [US3] PDF 생성 로직 (HTML → PDF 변환) in backend/src/services/pdf/generator.py
-- [ ] T088 [US3] PDF 파일 저장 및 URL 생성 (Supabase Storage) in backend/src/services/pdf/storage.py
-- [ ] T089 [US3] GET /v1/exports/pdf/{planId} 엔드포인트 in backend/src/api/v1/exports.py
+- [x] T084 [US3] Puppeteer 설정 및 브라우저 인스턴스 풀 in backend/src/services/pdf/__init__.py
+- [x] T085 [US3] HTML 템플릿 설계 (Tailwind CSS 사용) in backend/src/services/pdf/templates/itinerary.html
+- [x] T086 [US3] Mapbox Static API 통합 (지도 이미지 생성) in backend/src/integrations/mapbox.py
+- [x] T087 [US3] PDF 생성 로직 (HTML → PDF 변환) in backend/src/services/pdf/generator.py
+- [x] T088 [US3] PDF 파일 저장 및 URL 생성 (Supabase Storage) in backend/src/services/pdf/storage.py
+- [x] T089 [US3] GET /v1/exports/pdf/{planId} 엔드포인트 in backend/src/api/v1/exports.py
 
 ### 프론트엔드 - PDF 다운로드 UI (US3)
 
-- [ ] T090 [US3] PDF 다운로드 버튼 컴포넌트 in frontend/src/components/exports/PdfDownloadButton.tsx
-- [ ] T091 [US3] PDF 미리보기 컴포넌트 (선택사항) in frontend/src/components/pdf/PdfPreview.tsx
-- [ ] T092 [US3] 여행 일정 상세 페이지에 PDF 다운로드 기능 통합 in frontend/src/app/(auth)/plan/[id]/page.tsx
+- [x] T090 [US3] PDF 다운로드 버튼 컴포넌트 in frontend/src/components/exports/PdfDownloadButton.tsx
+- [x] T091 [US3] PDF 미리보기 컴포넌트 (선택사항) in frontend/src/components/pdf/PdfPreview.tsx
+- [x] T092 [US3] 여행 일정 상세 페이지에 PDF 다운로드 기능 통합 in frontend/src/app/(auth)/plan/[id]/page.tsx
 
 ### 브랜딩 및 스타일링 (US3)
 
-- [ ] T093 [P] [US3] TravelTailor 로고 및 브랜드 에셋 추가 in backend/src/services/pdf/assets/
-- [ ] T094 [P] [US3] PDF 스타일 시트 작성 (Tailwind CSS) in backend/src/services/pdf/templates/styles.css
+- [x] T093 [P] [US3] TravelTailor 로고 및 브랜드 에셋 추가 in backend/src/services/pdf/assets/
+- [x] T094 [P] [US3] PDF 스타일 시트 작성 (Tailwind CSS) in backend/src/services/pdf/templates/styles.css
 
 **체크포인트**: User Story 3 완료 - 여행 일정을 브랜딩된 PDF로 다운로드하여 오프라인에서도 확인 가능해야 함
 

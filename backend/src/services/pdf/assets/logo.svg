@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="200" height="48" viewBox="0 0 200 48">
+  <defs>
+    <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#2563eb"/>
+      <stop offset="100%" stop-color="#38bdf8"/>
+    </linearGradient>
+  </defs>
+  <g fill="none" fill-rule="evenodd">
+    <path fill="url(#gradient)" d="M12 6c-3.314 0-6 2.686-6 6v24c0 1.105.895 2 2 2h12c1.105 0 2-.895 2-2V12c0-3.314-2.686-6-6-6h-4Zm0 4h4c1.105 0 2 .895 2 2v24h-8V12c0-1.105.895-2 2-2Z"/>
+    <path fill="url(#gradient)" d="M34 10c-5.514 0-10 4.486-10 10v14h6V20c0-2.21 1.79-4 4-4s4 1.79 4 4v14h6V20c0-5.514-4.486-10-10-10Z" opacity=".8"/>
+    <path fill="url(#gradient)" d="M60 10c-5.514 0-10 4.486-10 10v14h6V20c0-2.21 1.79-4 4-4s4 1.79 4 4v14h6V20c0-5.514-4.486-10-10-10Zm18 0c-1.105 0-2 .895-2 2v32h6V26l8 8 8-8v18h6V12c0-1.105-.895-2-2-2h-2.343c-.53 0-1.039.211-1.414.586L86 18l-12-12h-4Z"/>
+    <text x="110" y="30" font-family="Inter, Helvetica, Arial, sans-serif" font-weight="600" font-size="18" fill="#0f172a">
+      TravelTailor
+    </text>
+  </g>
+</svg>
