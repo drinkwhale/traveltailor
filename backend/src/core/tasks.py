@@ -32,6 +32,7 @@ celery_app.conf.update(
     accept_content=["json"],
     timezone="UTC",
     enable_utc=True,
+    task_default_queue="default",  # 기본 큐를 'default'로 설정하여 워커가 소비할 수 있도록 함
     broker_transport_options={"visibility_timeout": 60 * 60},  # 1 hour
     task_time_limit=60 * 10,  # Hard limit: 10 minutes
     task_soft_time_limit=60 * 8,  # Soft limit: 8 minutes
