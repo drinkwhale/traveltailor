@@ -36,12 +36,6 @@ class Settings(BaseSettings):
     MAPBOX_ACCESS_TOKEN: str
     SKYSCANNER_API_KEY: str = ""
 
-    # Task Queue
-    REDIS_URL: str = "redis://localhost:6379/0"
-
-    # Metrics
-    METRICS_ENABLED: bool = True
-
     # CORS
     ALLOWED_ORIGINS: List[str] = ["http://localhost:3000", "http://localhost:8000"]
 

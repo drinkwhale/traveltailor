@@ -43,8 +43,8 @@
 - [x] T010 Alembic 마이그레이션 프레임워크 설정 in backend/alembic/
 - [x] T011 User 모델 및 테이블 생성 in backend/src/models/user.py
 - [x] T012 UserPreference 모델 및 테이블 생성 in backend/src/models/user_preference.py
-- [x] T013 데이터베이스 마이그레이션 스크립트 작성 (users, user_preferences)
-- [x] T013a 마이그레이션 드라이런 및 롤백 전략 문서화 in backend/alembic/README.md
+- [ ] T013 데이터베이스 마이그레이션 스크립트 작성 (users, user_preferences)
+- [ ] T013a 마이그레이션 드라이런 및 롤백 전략 문서화 in backend/alembic/README.md
 - [x] T014 Supabase Auth 설정 (이메일/비밀번호 인증)
 - [x] T015 JWT 인증 미들웨어 구현 in backend/src/core/security.py
 - [x] T016 인증 API 엔드포인트 구현 in backend/src/api/v1/auth.py (회원가입, 로그인, 프로필 조회)
@@ -72,16 +72,16 @@
 - [x] T029 [P] Google Places API 클라이언트 기본 구조 in backend/src/integrations/google_maps.py
 - [x] T030 [P] OpenAI/LangChain 클라이언트 기본 구조 in backend/src/services/ai/__init__.py
 - [x] T031 [P] Mapbox 설정 in frontend/src/lib/mapbox.ts
-- [x] T029a 외부 API 계약/키 상태 점검 및 문서화 in docs/external-apis.md
-- [x] T029b 외부 API 호출 비용·쿼터 계산 시트 작성 in docs/external-apis.md
+- [ ] T029a 외부 API 계약/키 상태 점검 및 문서화 in docs/external-apis.md
+- [ ] T029b 외부 API 호출 비용·쿼터 계산 시트 작성 in docs/external-apis.md
 
 ### AI/ML 인프라 (아키텍처 분석 보고서 기반 추가)
 
 - [x] T031a [P] OpenAI API 타임아웃 및 Retry 로직 구현 (tenacity, 60초 타임아웃) in backend/src/integrations/openai_client.py
 - [x] T031b [P] AI Fallback 메커니즘 (규칙 기반 백업 시스템) in backend/src/services/ai/fallback.py
 - [x] T031c [P] AI 비용 추적 미들웨어 (일일 예산 $50 제한) in backend/src/middleware/cost_tracking.py
-- [x] T031d [P] 비동기 작업 큐 구성 (Redis + RQ/Celery) in backend/src/core/tasks.py
-- [x] T031e [P] AI 파이프라인 메트릭 수집 (Prometheus exporter) in backend/src/metrics/ai_pipeline.py
+- [ ] T031d [P] 비동기 작업 큐 구성 (Redis + RQ/Celery) in backend/src/core/tasks.py
+- [ ] T031e [P] AI 파이프라인 메트릭 수집 (Prometheus exporter) in backend/src/metrics/ai_pipeline.py
 
 **체크포인트**: T029a, T029b, T031d, T031e 완료 후 User Story 1 구현 착수 가능
 
