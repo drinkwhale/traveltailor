@@ -1,5 +1,5 @@
 """API v1 package"""
 
-from . import auth
+from . import auth, travel_plans
 
-__all__ = ["auth"]
+__all__ = ["auth", "travel_plans"]

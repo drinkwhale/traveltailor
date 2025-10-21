@@ -197,6 +197,8 @@ pnpm-debug.log*
 *.pth
 *.ckpt
 models/
+!backend/src/models/
+!backend/src/models/**
 checkpoints/
 
 # Data files
