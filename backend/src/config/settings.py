@@ -36,6 +36,8 @@ class Settings(BaseSettings):
     GOOGLE_MAPS_API_KEY: str
     MAPBOX_ACCESS_TOKEN: str
     SKYSCANNER_API_KEY: str = ""
+    BOOKING_COM_AFFILIATE_ID: str = ""
+    AGODA_API_KEY: str = ""
 
     # Task Queue
     REDIS_URL: str = "redis://localhost:6379/0"

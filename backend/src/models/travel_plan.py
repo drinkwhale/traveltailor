@@ -72,5 +72,17 @@ class TravelPlan(Base):
         cascade="all, delete-orphan",
         lazy="selectin",
     )
+    flight_options = relationship(
+        "FlightOption",
+        back_populates="travel_plan",
+        cascade="all, delete-orphan",
+        lazy="selectin",
+    )
+    accommodation_options = relationship(
+        "AccommodationOption",
+        back_populates="travel_plan",
+        cascade="all, delete-orphan",
+        lazy="selectin",
+    )
     def __repr__(self) -> str:
         return f"<TravelPlan {self.destination} {self.start_date}~{self.end_date}>"

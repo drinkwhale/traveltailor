@@ -247,38 +247,38 @@
 
 ### 데이터 모델 (US4)
 
-- [ ] T095 [P] [US4] FlightOption 모델 생성 in backend/src/models/flight_option.py
-- [ ] T096 [P] [US4] AccommodationOption 모델 생성 in backend/src/models/accommodation_option.py
-- [ ] T097 [US4] 데이터베이스 마이그레이션 스크립트 작성 (flight_options, accommodation_options)
+- [x] T095 [P] [US4] FlightOption 모델 생성 in backend/src/models/flight_option.py
+- [x] T096 [P] [US4] AccommodationOption 모델 생성 in backend/src/models/accommodation_option.py
+- [x] T097 [US4] 데이터베이스 마이그레이션 스크립트 작성 (flight_options, accommodation_options)
 
 ### 외부 API 통합 (US4)
 
-- [ ] T098 [P] [US4] Skyscanner API 클라이언트 in backend/src/integrations/skyscanner.py
-- [ ] T099 [P] [US4] Booking.com 제휴 링크 생성 in backend/src/integrations/booking.py
-- [ ] T100 [P] [US4] Agoda API 클라이언트 in backend/src/integrations/agoda.py
+- [x] T098 [P] [US4] Skyscanner API 클라이언트 in backend/src/integrations/skyscanner.py
+- [x] T099 [P] [US4] Booking.com 제휴 링크 생성 in backend/src/integrations/booking.py
+- [x] T100 [P] [US4] Agoda API 클라이언트 in backend/src/integrations/agoda.py
 
 ### 추천 서비스 (US4)
 
-- [ ] T101 [US4] 항공편 검색 및 추천 서비스 in backend/src/services/recommendations/flight_recommender.py
-- [ ] T102 [US4] 숙박 검색 및 추천 서비스 in backend/src/services/recommendations/accommodation_recommender.py
-- [ ] T103 [US4] 제휴 링크 추적 유틸리티 in backend/src/core/affiliate_tracker.py
+- [x] T101 [US4] 항공편 검색 및 추천 서비스 in backend/src/services/recommendations/flight_recommender.py
+- [x] T102 [US4] 숙박 검색 및 추천 서비스 in backend/src/services/recommendations/accommodation_recommender.py
+- [x] T103 [US4] 제휴 링크 추적 유틸리티 in backend/src/core/affiliate_tracker.py
 
 ### API 엔드포인트 (US4)
 
-- [ ] T104 [P] [US4] GET /v1/recommendations/flights/{planId} 엔드포인트 in backend/src/api/v1/recommendations.py
-- [ ] T105 [P] [US4] GET /v1/recommendations/accommodations/{planId} 엔드포인트 in backend/src/api/v1/recommendations.py
+- [x] T104 [P] [US4] GET /v1/recommendations/flights/{planId} 엔드포인트 in backend/src/api/v1/recommendations.py
+- [x] T105 [P] [US4] GET /v1/recommendations/accommodations/{planId} 엔드포인트 in backend/src/api/v1/recommendations.py
 
 ### 프론트엔드 UI (US4)
 
-- [ ] T106 [US4] 항공편 추천 카드 컴포넌트 in frontend/src/components/recommendations/FlightCard.tsx
-- [ ] T107 [US4] 숙박 추천 카드 컴포넌트 in frontend/src/components/recommendations/AccommodationCard.tsx
-- [ ] T108 [US4] 추천 섹션 컴포넌트 in frontend/src/components/recommendations/RecommendationsSection.tsx
-- [ ] T109 [US4] 여행 일정 상세 페이지에 추천 섹션 통합 in frontend/src/app/(auth)/plan/[id]/page.tsx
+- [x] T106 [US4] 항공편 추천 카드 컴포넌트 in frontend/src/components/recommendations/FlightCard.tsx
+- [x] T107 [US4] 숙박 추천 카드 컴포넌트 in frontend/src/components/recommendations/AccommodationCard.tsx
+- [x] T108 [US4] 추천 섹션 컴포넌트 in frontend/src/components/recommendations/RecommendationsSection.tsx
+- [x] T109 [US4] 여행 일정 상세 페이지에 추천 섹션 통합 in frontend/src/app/(auth)/plan/[id]/page.tsx
 
 ### 에러 처리 (US4)
 
-- [ ] T110 [US4] 외부 API 장애 시 그레이스풀 디그레이데이션 in backend/src/services/recommendations/
-- [ ] T111 [US4] 예약 링크 unavailable 시 사용자 피드백 in frontend/src/components/recommendations/
+- [x] T110 [US4] 외부 API 장애 시 그레이스풀 디그레이데이션 in backend/src/services/recommendations/
+- [x] T111 [US4] 예약 링크 unavailable 시 사용자 피드백 in frontend/src/components/recommendations/
 
 **체크포인트**: User Story 4 완료 - 여행 일정에 항공편 및 숙박 추천 옵션과 예약 링크가 포함되어야 함
 

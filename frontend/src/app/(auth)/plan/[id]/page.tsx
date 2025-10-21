@@ -8,8 +8,10 @@ import { DailyTimeline } from '@/components/timeline/DailyTimeline'
 import { ProgressIndicator } from '@/components/ui/ProgressIndicator'
 import { ExportButtons } from '@/components/map/ExportButtons'
 import { RouteMap } from '@/components/map/RouteMap'
+import { RecommendationsSection } from '@/components/recommendations/RecommendationsSection'
 import { useMapExport } from '@/hooks/useMapExport'
 import { useTravelPlan } from '@/hooks/useTravelPlan'
+import { useRecommendations } from '@/hooks/useRecommendations'
 
 interface PlanDetailPageProps {
   params: {
@@ -23,6 +25,14 @@ export default function PlanDetailPage({ params }: PlanDetailPageProps) {
   const { data: mapExport, days: mapDays, isLoading: isMapLoading, error: mapError } = useMapExport(
     plan?.id
   )
+  const {
+    flights,
+    accommodations,
+    isLoading: isRecommendationsLoading,
+    error: recommendationsError,
+    hasFetched: hasRecommendationFetched,
+    refresh: refreshRecommendations,
+  } = useRecommendations(plan?.id)
   const [selectedDayIndex, setSelectedDayIndex] = useState(0)
 
   useEffect(() => {
@@ -160,6 +170,15 @@ export default function PlanDetailPage({ params }: PlanDetailPageProps) {
       </section>
 
       {renderMapSection()}
+
+      <RecommendationsSection
+        flights={flights}
+        accommodations={accommodations}
+        isLoading={isRecommendationsLoading}
+        error={recommendationsError}
+        hasFetched={hasRecommendationFetched}
+        onRefresh={refreshRecommendations}
+      />
 
       <div className="grid gap-6 lg:grid-cols-[260px,1fr]">
         <BudgetSummary

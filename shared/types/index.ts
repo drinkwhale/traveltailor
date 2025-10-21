@@ -10,3 +10,4 @@ export * from './common';
 export * from './enums';
 export * from './travel-plan';
 export * from './map';
+export * from './recommendations';
