@@ -38,7 +38,7 @@
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
-│                     Frontend (Next.js 15)                    │
+│                     Frontend (Next.js 14)                    │
 │  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐      │
 │  │   Pages      │  │  Components  │  │    Hooks     │      │
 │  │  (App Router)│  │  (Shadcn UI) │  │  (useAuth)   │      │
@@ -74,7 +74,7 @@
 
 **✅ 잘 선택된 부분**:
 - FastAPI + Python 3.11: AI/ML 통합에 적합
-- Next.js 15 + React 19: 최신 웹 프레임워크
+- Next.js 14 + React 18: 안정적 웹 프레임워크
 - Supabase: 빠른 MVP 개발, Auth + DB 통합
 - SQLAlchemy + Alembic: 성숙한 ORM + 마이그레이션
 - TypeScript: 타입 안전성
@@ -288,7 +288,7 @@ frontend/src/
 ```
 
 **장점**:
-- Next.js 15 App Router 활용 (라우트 그룹)
+- Next.js 14 App Router 활용 (라우트 그룹)
 - 명확한 인증/공개 영역 분리
 
 ### 3.2 API 클라이언트 설계
@@ -1423,7 +1423,7 @@ if not settings.OPENAI_API_KEY:
 
 3. **✅ 모던한 기술 스택**
    - FastAPI (비동기 지원)
-   - Next.js 15 (최신 웹 프레임워크)
+   - Next.js 14 (안정적 웹 프레임워크)
    - TypeScript (타입 안전성)
 
 4. **✅ 상세한 계획 및 문서**

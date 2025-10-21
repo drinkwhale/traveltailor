@@ -181,7 +181,7 @@
 
 ## Technical Constraints & External Dependencies
 
-- **프론트엔드 기술 스택**: Next.js 14, React 18 LTS, TypeScript 5.x, Tailwind CSS. Next.js 15/React 19는 안정화 이후 별도 스파이크에서 검토한다.
+- **프론트엔드 기술 스택**: Next.js 14, React 18 LTS, TypeScript 5.x, Tailwind CSS. 차기 메이저 버전은 안정화 이후 별도 스파이크에서 검토한다.
 - **백엔드 기술 스택**: FastAPI, Python 3.11, SQLAlchemy, Pydantic v2, LangChain(OpenAI GPT-4o). AI 호출은 비동기 태스크 큐와 Redis 캐시로 관리한다.
 - **외부 서비스 계약**:
   - OpenAI API: 일일 비용 상한과 요청 타임아웃(최대 45초)을 설정하고, 실패 시 `fallback-template` 전략을 적용한다.
