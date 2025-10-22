@@ -1,5 +1,6 @@
 import axios, { AxiosInstance, AxiosError, AxiosRequestConfig } from 'axios'
-import { supabase } from './supabase'
+
+import { detectStrategy, readToken, clearToken } from './token-storage'
 
 /**
  * API 클라이언트 설정
@@ -8,6 +9,23 @@ import { supabase } from './supabase'
  */
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'
+
+let csrfToken: string | null = null
+
+async function ensureCsrfToken(): Promise<string> {
+  if (detectStrategy() === 'cookie') {
+    if (csrfToken) {
+      return csrfToken
+    }
+    const response = await axios.get<{ csrf_token: string }>('/v1/csrf-token', {
+      baseURL: API_BASE_URL,
+      withCredentials: true,
+    })
+    csrfToken = response.data.csrf_token
+    return csrfToken
+  }
+  return ''
+}
 
 /**
  * Axios 인스턴스 생성
@@ -18,6 +36,7 @@ export const apiClient: AxiosInstance = axios.create({
   headers: {
     'Content-Type': 'application/json',
   },
+  withCredentials: true,
 })
 
 /**
@@ -26,13 +45,18 @@ export const apiClient: AxiosInstance = axios.create({
  */
 apiClient.interceptors.request.use(
   async (config) => {
-    // Supabase 세션에서 JWT 토큰 가져오기
-    const {
-      data: { session },
-    } = await supabase.auth.getSession()
+    if (detectStrategy() !== 'cookie') {
+      const token = await readToken()
+      if (token) {
+        config.headers.Authorization = `Bearer ${token}`
+      }
+    }
 
-    if (session?.access_token) {
-      config.headers.Authorization = `Bearer ${session.access_token}`
+    if (config.method && ['post', 'put', 'patch', 'delete'].includes(config.method)) {
+      const token = await ensureCsrfToken()
+      if (token) {
+        config.headers['X-CSRF-Token'] = token
+      }
     }
 
     return config
@@ -59,31 +83,17 @@ apiClient.interceptors.response.use(
       originalRequest._retry = true
 
       try {
-        // 토큰 갱신 시도
-        const {
-          data: { session },
-          error: _refreshError,
-        } = await supabase.auth.refreshSession()
-
-        if (_refreshError || !session) {
-          // 토큰 갱신 실패 시 로그아웃
-          await supabase.auth.signOut()
-          window.location.href = '/login'
-          return Promise.reject(error)
-        }
-
-        // 새 토큰으로 원래 요청 재시도
-        if (originalRequest.headers) {
-          originalRequest.headers.Authorization = `Bearer ${session.access_token}`
-        }
-
-        return apiClient(originalRequest)
+        await clearToken()
+        window.location.href = '/login'
+        return Promise.reject(error)
       } catch (_refreshError) {
-        // 갱신 실패
-        await supabase.auth.signOut()
         window.location.href = '/login'
         return Promise.reject(error)
       }
+    }
+
+    if (error.response?.status === 403 && originalRequest._retry !== true) {
+      csrfToken = null
     }
 
     return Promise.reject(error)

@@ -3,11 +3,15 @@ Authentication API endpoints
 회원가입, 로그인, 프로필 조회
 """
 
-from fastapi import APIRouter, Depends, HTTPException, status
+from datetime import timedelta
+
+from fastapi import APIRouter, Depends, HTTPException, Request, Response, status
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
 
+from ...api.dependencies import rate_limit
 from ...config.database import get_db
+from ...config.settings import settings
 from ...models.user import User
 from ...schemas.auth import UserSignup, UserLogin, Token, UserResponse
 from ...core.security import (
@@ -20,8 +24,27 @@ from ...core.security import (
 router = APIRouter(prefix="/auth", tags=["Authentication"])
 
 
+def _set_auth_cookie(response: Response, token: str) -> None:
+    """Attach httpOnly session cookie for web clients."""
+    response.set_cookie(
+        key=settings.SESSION_COOKIE_NAME,
+        value=token,
+        httponly=True,
+        secure=settings.SESSION_COOKIE_SECURE,
+        samesite=settings.SESSION_COOKIE_SAMESITE,
+        domain=settings.SESSION_COOKIE_DOMAIN,
+        max_age=settings.ACCESS_TOKEN_EXPIRE_MINUTES * 60,
+    )
+
+
 @router.post("/signup", response_model=Token, status_code=status.HTTP_201_CREATED)
-async def signup(user_data: UserSignup, db: AsyncSession = Depends(get_db)) -> Token:
+@rate_limit(settings.RATE_LIMIT_AUTH)
+async def signup(
+    user_data: UserSignup,
+    response: Response,
+    request: Request,
+    db: AsyncSession = Depends(get_db),
+) -> Token:
     """
     회원가입
     - 이메일 중복 확인
@@ -49,13 +72,24 @@ async def signup(user_data: UserSignup, db: AsyncSession = Depends(get_db)) -> T
     await db.refresh(new_user)
 
     # Create access token
-    access_token = create_access_token(data={"sub": str(new_user.id)})
+    access_token = create_access_token(
+        data={"sub": str(new_user.id)},
+        expires_delta=timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES),
+    )
+    _set_auth_cookie(response, access_token)
+    request.state.user_id = str(new_user.id)
 
     return Token(access_token=access_token)
 
 
 @router.post("/login", response_model=Token)
-async def login(user_data: UserLogin, db: AsyncSession = Depends(get_db)) -> Token:
+@rate_limit(settings.RATE_LIMIT_AUTH)
+async def login(
+    user_data: UserLogin,
+    response: Response,
+    request: Request,
+    db: AsyncSession = Depends(get_db),
+) -> Token:
     """
     로그인
     - 이메일/비밀번호 검증
@@ -75,7 +109,12 @@ async def login(user_data: UserLogin, db: AsyncSession = Depends(get_db)) -> Tok
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Inactive user")
 
     # Create access token
-    access_token = create_access_token(data={"sub": str(user.id)})
+    access_token = create_access_token(
+        data={"sub": str(user.id)},
+        expires_delta=timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES),
+    )
+    _set_auth_cookie(response, access_token)
+    request.state.user_id = str(user.id)
 
     return Token(access_token=access_token)
 
@@ -102,4 +141,16 @@ async def get_current_user(
         is_active=user.is_active,
         subscription_tier=user.subscription_tier,
         created_at=user.created_at.isoformat(),
+    )
+
+
+@router.post("/logout", status_code=status.HTTP_204_NO_CONTENT)
+async def logout(response: Response) -> None:
+    """Clear auth cookie for browser clients."""
+    response.delete_cookie(
+        key=settings.SESSION_COOKIE_NAME,
+        domain=settings.SESSION_COOKIE_DOMAIN,
+        httponly=True,
+        secure=settings.SESSION_COOKIE_SECURE,
+        samesite=settings.SESSION_COOKIE_SAMESITE,  # type: ignore[arg-type]
     )

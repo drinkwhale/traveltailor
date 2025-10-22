@@ -54,6 +54,28 @@ ai_daily_budget_remaining = Gauge(
     registry=registry,
 )
 
+api_requests_total = Counter(
+    "api_requests_total",
+    "Total HTTP requests by method, route and status",
+    ["method", "route", "status"],
+    registry=registry,
+)
+
+api_request_latency_seconds = Histogram(
+    "api_request_latency_seconds",
+    "Latency of FastAPI endpoints",
+    ["method", "route"],
+    buckets=(0.05, 0.1, 0.2, 0.5, 1, 2, 4),
+    registry=registry,
+)
+
+api_request_errors_total = Counter(
+    "api_request_errors_total",
+    "Total number of failed FastAPI responses",
+    ["method", "route", "status"],
+    registry=registry,
+)
+
 # FastAPI router for /metrics endpoint
 metrics_router = APIRouter()
 
@@ -87,6 +109,32 @@ def record_fallback(reason: str) -> None:
 def update_daily_budget_remaining(amount_usd: float) -> None:
     """Update remaining AI budget gauge."""
     ai_daily_budget_remaining.set(amount_usd)
+
+
+def record_api_request(
+    method: str,
+    route: str,
+    status_code: int,
+    latency_seconds: float,
+) -> None:
+    """
+    Record general API metrics for observability.
+
+    Args:
+        method: HTTP method
+        route: Normalised route path
+        status_code: HTTP status code
+        latency_seconds: Response latency
+    """
+    status_label = str(status_code)
+    api_requests_total.labels(method=method, route=route, status=status_label).inc()
+    api_request_latency_seconds.labels(method=method, route=route).observe(latency_seconds)
+    if status_code >= 400:
+        api_request_errors_total.labels(
+            method=method,
+            route=route,
+            status=status_label,
+        ).inc()
 
 
 def register_metrics(app: FastAPI) -> None:

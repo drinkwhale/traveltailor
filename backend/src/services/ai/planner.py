@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import asyncio
+import logging
 from time import perf_counter
 from typing import Any
 from uuid import UUID
@@ -11,6 +12,7 @@ from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from ...config.settings import settings
+from ...metrics.ai_pipeline import observe_request
 from ...models.daily_itinerary import DailyItinerary
 from ...models.itinerary_place import ItineraryPlace
 from ...models.place import Place
@@ -27,6 +29,8 @@ from .preference_analyzer import AnalyzedPreferences, PreferenceAnalyzer
 from .timeline_generator import TimelineGenerator
 from .types import DailyItineraryDraft, TravelPlanDraft
 from ..preferences.auto_updater import PreferenceAutoUpdater
+
+logger = logging.getLogger(__name__)
 
 
 class TravelPlanner:
@@ -261,6 +265,19 @@ class TravelPlanner:
 
         await self.session.commit()
         await self.session.refresh(plan)
+
+        if plan.generation_time_seconds is not None:
+            observe_request(
+                getattr(settings, "OPENAI_MODEL", "planner"),
+                "success",
+                float(plan.generation_time_seconds),
+            )
+            logger.info(
+                "Generated plan %s for user %s in %.2fs",
+                plan.id,
+                plan.user_id,
+                plan.generation_time_seconds,
+            )
         return plan
 
     async def build_response(self, plan: TravelPlan) -> TravelPlanResponse:

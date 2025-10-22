@@ -5,12 +5,18 @@ from __future__ import annotations
 from typing import Any
 from uuid import UUID
 
-from fastapi import APIRouter, Depends, HTTPException, Query, status
-from sqlalchemy import select, update, delete, func
+from fastapi import APIRouter, Depends, HTTPException, Query, Request, status
+from sqlalchemy import delete, func, select, update
 from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.orm import selectinload
 
+from ...api.dependencies import rate_limit
 from ...config.database import get_db
+from ...core.csrf import require_csrf_token
 from ...core.security import get_current_user_id
+from ...models.daily_itinerary import DailyItinerary
+from ...models.itinerary_place import ItineraryPlace
+from ...models.route import Route
 from ...models.travel_plan import TravelPlan
 from ...schemas.base import ApiResponse, PaginatedResponse
 from ...schemas.travel_plan import (
@@ -33,7 +39,16 @@ async def _get_plan_or_404(
 ) -> TravelPlan:
     user_uuid = UUID(user_id)
     result = await session.execute(
-        select(TravelPlan).where(TravelPlan.id == plan_id, TravelPlan.user_id == user_uuid)
+        select(TravelPlan)
+        .options(
+            selectinload(TravelPlan.daily_itineraries)
+            .selectinload(DailyItinerary.itinerary_places)
+            .selectinload(ItineraryPlace.place),
+            selectinload(TravelPlan.daily_itineraries).selectinload(DailyItinerary.routes),
+            selectinload(TravelPlan.flight_options),
+            selectinload(TravelPlan.accommodation_options),
+        )
+        .where(TravelPlan.id == plan_id, TravelPlan.user_id == user_uuid)
     )
     plan = result.scalar_one_or_none()
     if not plan:
@@ -41,9 +56,16 @@ async def _get_plan_or_404(
     return plan
 
 
-@router.post("", response_model=ApiResponse[TravelPlanResponse], status_code=status.HTTP_201_CREATED)
+@router.post(
+    "",
+    response_model=ApiResponse[TravelPlanResponse],
+    status_code=status.HTTP_201_CREATED,
+    dependencies=[Depends(require_csrf_token)],
+)
+@rate_limit("10/minute")
 async def create_travel_plan(
     payload: TravelPlanCreate,
+    request: Request,
     user_id: str = Depends(get_current_user_id),
     session: AsyncSession = Depends(get_db),
 ) -> ApiResponse[TravelPlanResponse]:
@@ -115,7 +137,11 @@ async def list_travel_plans(
     return ApiResponse(success=True, data=paginated)
 
 
-@router.patch("/{plan_id}", response_model=ApiResponse[TravelPlanResponse])
+@router.patch(
+    "/{plan_id}",
+    response_model=ApiResponse[TravelPlanResponse],
+    dependencies=[Depends(require_csrf_token)],
+)
 async def update_travel_plan(
     plan_id: UUID,
     payload: TravelPlanUpdate,
@@ -146,7 +172,11 @@ async def update_travel_plan(
     return ApiResponse(success=True, data=response)
 
 
-@router.delete("/{plan_id}", status_code=status.HTTP_204_NO_CONTENT)
+@router.delete(
+    "/{plan_id}",
+    status_code=status.HTTP_204_NO_CONTENT,
+    dependencies=[Depends(require_csrf_token)],
+)
 async def delete_travel_plan(
     plan_id: UUID,
     user_id: str = Depends(get_current_user_id),

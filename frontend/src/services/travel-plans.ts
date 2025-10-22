@@ -1,4 +1,5 @@
 import { apiClient, ApiResponse, handleApiError } from '@/lib/api'
+import { enqueueRequest } from '@/lib/offline-storage'
 import type {
   TravelPlanCreate,
   TravelPlanDetail,
@@ -18,6 +19,15 @@ export async function createTravelPlan(request: TravelPlanCreate): Promise<Trave
     }
     return data.data
   } catch (error) {
+    if (typeof window !== 'undefined' && !navigator.onLine) {
+      await enqueueRequest({
+        id: crypto.randomUUID(),
+        endpoint: BASE_PATH,
+        method: 'POST',
+        payload: request,
+        createdAt: Date.now(),
+      })
+    }
     throw handleApiError(error)
   }
 }
@@ -82,6 +92,15 @@ export async function updateTravelPlan(
     }
     return data.data
   } catch (error) {
+    if (typeof window !== 'undefined' && !navigator.onLine) {
+      await enqueueRequest({
+        id: crypto.randomUUID(),
+        endpoint: `${BASE_PATH}/${planId}`,
+        method: 'PATCH',
+        payload,
+        createdAt: Date.now(),
+      })
+    }
     throw handleApiError(error)
   }
 }
@@ -90,7 +109,15 @@ export async function deleteTravelPlan(planId: string): Promise<void> {
   try {
     await apiClient.delete(`${BASE_PATH}/${planId}`)
   } catch (error) {
+    if (typeof window !== 'undefined' && !navigator.onLine) {
+      await enqueueRequest({
+        id: crypto.randomUUID(),
+        endpoint: `${BASE_PATH}/${planId}`,
+        method: 'DELETE',
+        payload: null,
+        createdAt: Date.now(),
+      })
+    }
     throw handleApiError(error)
   }
 }
-

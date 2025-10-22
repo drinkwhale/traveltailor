@@ -8,16 +8,17 @@ from datetime import date, datetime
 from uuid import UUID
 from typing import Any, Literal
 
-from pydantic import BaseModel, Field, field_serializer, model_validator
+from pydantic import Field, field_serializer, field_validator, model_validator
 
 from .itinerary import DailyItineraryResponse
+from .base import SanitizedModel
 
 
 TravelerType = Literal["couple", "family", "solo", "friends"]
 PlanStatus = Literal["draft", "in_progress", "completed", "failed", "archived"]
 
 
-class TravelPreferences(BaseModel):
+class TravelPreferences(SanitizedModel):
     """Preferences supplied when generating a travel plan"""
 
     interests: list[str] = Field(default_factory=list)
@@ -28,7 +29,7 @@ class TravelPreferences(BaseModel):
     notes: str | None = None
 
 
-class TravelPlanCreate(BaseModel):
+class TravelPlanCreate(SanitizedModel):
     """Request payload for creating a travel plan"""
 
     title: str | None = None
@@ -47,8 +48,18 @@ class TravelPlanCreate(BaseModel):
             raise ValueError("end_date must be on or after start_date")
         return self
 
+    @field_validator("title", mode="before")
+    @classmethod
+    def strip_title(cls, value: str | None) -> str | None:
+        if value is None:
+            return None
+        value = value.strip()
+        if len(value) > 140:
+            raise ValueError("title must be 140 characters or fewer")
+        return value
 
-class BudgetBreakdown(BaseModel):
+
+class BudgetBreakdown(SanitizedModel):
     """Detailed budget allocation"""
 
     accommodation: int = 0
@@ -61,7 +72,7 @@ class BudgetBreakdown(BaseModel):
         return self.accommodation + self.food + self.activities + self.transport
 
 
-class TravelPlanSummary(BaseModel):
+class TravelPlanSummary(SanitizedModel):
     """List item summary"""
 
     id: UUID
@@ -84,7 +95,7 @@ class TravelPlanSummary(BaseModel):
         from_attributes = True
 
 
-class TravelPlanStatusResponse(BaseModel):
+class TravelPlanStatusResponse(SanitizedModel):
     """Status payload for async creation"""
 
     id: UUID
@@ -93,7 +104,7 @@ class TravelPlanStatusResponse(BaseModel):
     message: str | None = None
 
 
-class TravelPlanUpdate(BaseModel):
+class TravelPlanUpdate(SanitizedModel):
     """Permitted fields for travel plan patch"""
 
     title: str | None = None
@@ -101,7 +112,7 @@ class TravelPlanUpdate(BaseModel):
     preferences: dict[str, Any] | None = None
 
 
-class TravelPlanResponse(BaseModel):
+class TravelPlanResponse(SanitizedModel):
     """Detailed travel plan with itineraries"""
 
     id: UUID
