@@ -4,11 +4,11 @@ Travel plan schemas
 
 from __future__ import annotations
 
-from datetime import date
+from datetime import date, datetime
 from uuid import UUID
 from typing import Any, Literal
 
-from pydantic import BaseModel, Field, model_validator
+from pydantic import BaseModel, Field, field_serializer, model_validator
 
 from .itinerary import DailyItineraryResponse
 
@@ -73,7 +73,12 @@ class TravelPlanSummary(BaseModel):
     total_nights: int
     status: PlanStatus
     budget_total: int
-    created_at: str
+    created_at: datetime
+
+    @field_serializer('created_at')
+    def serialize_created_at(self, dt: datetime, _info) -> str:
+        """Serialize datetime to ISO 8601 format (RFC-3339 compliant)"""
+        return dt.isoformat()
 
     class Config:
         from_attributes = True
@@ -117,9 +122,14 @@ class TravelPlanResponse(BaseModel):
     status: PlanStatus
     ai_model_version: str | None = None
     generation_time_seconds: float | None = None
-    created_at: str
-    updated_at: str
+    created_at: datetime
+    updated_at: datetime
     daily_itineraries: list[DailyItineraryResponse] = Field(default_factory=list)
+
+    @field_serializer('created_at', 'updated_at')
+    def serialize_datetime(self, dt: datetime, _info) -> str:
+        """Serialize datetime to ISO 8601 format (RFC-3339 compliant)"""
+        return dt.isoformat()
 
     class Config:
         from_attributes = True
