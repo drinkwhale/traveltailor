@@ -167,7 +167,8 @@ database.json
 # ====================
 .env
 .env.*
-!.env.example
+!**/.env.example
+!**/.env.production.example
 secrets.json
 credentials.json
 config/secrets.yaml
@@ -209,6 +210,8 @@ datasets/
 !package.json
 !tsconfig.json
 !next.config.json
+!frontend/vercel.json
+!backend/railway.json
 
 # ====================
 # Generated Files
