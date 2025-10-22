@@ -41,12 +41,21 @@ class Settings(BaseSettings):
 
     # Task Queue
     REDIS_URL: str = "redis://localhost:6379/0"
+    REDIS_TTL_PLACES: int = 60 * 15  # 15 minutes
+    REDIS_TTL_FLIGHTS: int = 60 * 5  # 5 minutes
+    RATE_LIMIT_DEFAULT: str = "100/minute"
+    RATE_LIMIT_AUTH: str = "5/minute"
 
     # Metrics
     METRICS_ENABLED: bool = True
+    SENTRY_DSN: str | None = None
+    SENTRY_SAMPLE_RATE: float = 0.1
+    POSTHOG_API_KEY: str | None = None
+    POSTHOG_HOST: str = "https://app.posthog.com"
 
     # CORS
     ALLOWED_ORIGINS: List[str] = ["http://localhost:3000", "http://localhost:8000"]
+    ALLOWED_METHODS: List[str] = ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"]
 
     # PDF Export
     PDF_POOL_SIZE: int = 2
@@ -61,10 +70,21 @@ class Settings(BaseSettings):
 
     # Logging
     LOG_LEVEL: str = "INFO"
+    LOG_JSON: bool = False
+
+    # Cookies / session (web)
+    SESSION_COOKIE_NAME: str = "tt_session"
+    SESSION_COOKIE_DOMAIN: str | None = None
+    SESSION_COOKIE_SECURE: bool = False
+    SESSION_COOKIE_SAMESITE: str = "lax"
 
     class Config:
         env_file = ".env"
         case_sensitive = True
+
+    def model_post_init(self, __context: dict[str, object]) -> None:
+        if self.APP_ENV == "production":
+            self.SESSION_COOKIE_SECURE = True
 
 
 # Global settings instance

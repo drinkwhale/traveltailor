@@ -322,53 +322,53 @@
 
 ### 성능 최적화
 
-- [ ] T123 [P] Redis 캐싱 설정 (장소 데이터, 항공편 가격) in backend/src/core/cache.py
-- [ ] T123a [P] 공간 인덱스 (PostGIS GIST) 마이그레이션 (33배 성능 향상) in backend/alembic/versions/xxx_spatial_index.py
-- [ ] T123b [P] 위치 기반 쿼리 최적화 (ST_DWithin, 거리순 정렬) in backend/src/services/places/geo_search.py
-- [ ] T124 [P] 데이터베이스 쿼리 최적화 (인덱스 추가, N+1 문제 해결 - selectinload/joinedload)
-- [ ] T124a [P] 계산된 필드를 @property로 리팩토링 (total_days, total_nights) in backend/src/models/travel_plan.py
-- [ ] T125 [P] 프론트엔드 번들 크기 최적화 (코드 스플리팅, 레이지 로딩)
-- [ ] T126 API 응답 시간 모니터링 및 최적화 (<200ms 목표)
-- [ ] T126a AI 파이프라인 부하 테스트 계획 및 실행 (30초 SLA 검증) in docs/perf/ai-pipeline.md
+- [x] T123 [P] Redis 캐싱 설정 (장소 데이터, 항공편 가격) in backend/src/core/cache.py
+- [x] T123a [P] 공간 인덱스 (PostGIS GIST) 마이그레이션 (33배 성능 향상) in backend/alembic/versions/xxx_spatial_index.py
+- [x] T123b [P] 위치 기반 쿼리 최적화 (ST_DWithin, 거리순 정렬) in backend/src/services/places/geo_search.py
+- [x] T124 [P] 데이터베이스 쿼리 최적화 (인덱스 추가, N+1 문제 해결 - selectinload/joinedload)
+- [x] T124a [P] 계산된 필드를 @property로 리팩토링 (total_days, total_nights) in backend/src/models/travel_plan.py
+- [x] T125 [P] 프론트엔드 번들 크기 최적화 (코드 스플리팅, 레이지 로딩)
+- [x] T126 API 응답 시간 모니터링 및 최적화 (<200ms 목표)
+- [x] T126a AI 파이프라인 부하 테스트 계획 및 실행 (30초 SLA 검증) in docs/perf/ai-pipeline.md
 
 ### 보안 강화
 
-- [ ] T127 [P] Rate limiting 구현 (slowapi, 로그인/회원가입 5/min, API 제한) in backend/src/api/dependencies.py
-- [ ] T128 [P] 입력 sanitization (Pydantic validator 강화, 악의적 패턴 필터링) in backend/src/schemas/
-- [ ] T128a [P] XSS 방어 강화 (보안 헤더 업데이트, DOMPurify 통합) in backend/src/middleware/security_headers.py, frontend/src/lib/sanitize.ts
-- [ ] T128b [P] CSRF 토큰 검증 (POST/PUT/DELETE 엔드포인트) in backend/src/core/csrf.py
-- [ ] T129 CORS 설정 검토 및 강화 (와일드카드(*) 제거 확인) in backend/src/main.py
+- [x] T127 [P] Rate limiting 구현 (slowapi, 로그인/회원가입 5/min, API 제한) in backend/src/api/dependencies.py
+- [x] T128 [P] 입력 sanitization (Pydantic validator 강화, 악의적 패턴 필터링) in backend/src/schemas/
+- [x] T128a [P] XSS 방어 강화 (보안 헤더 업데이트, DOMPurify 통합) in backend/src/middleware/security_headers.py, frontend/src/lib/sanitize.ts
+- [x] T128b [P] CSRF 토큰 검증 (POST/PUT/DELETE 엔드포인트) in backend/src/core/csrf.py
+- [x] T129 CORS 설정 검토 및 강화 (와일드카드(*) 제거 확인) in backend/src/main.py
 
 ### 모니터링 및 로깅
 
-- [ ] T130 [P] Sentry 에러 트래킹 설정 (백엔드/프론트엔드)
-- [ ] T131 [P] PostHog 분석 설정 (사용자 행동 추적)
-- [ ] T132 주요 메트릭 로깅 (AI 생성 시간, API 호출 성공률)
+- [x] T130 [P] Sentry 에러 트래킹 설정 (백엔드/프론트엔드)
+- [x] T131 [P] PostHog 분석 설정 (사용자 행동 추적)
+- [x] T132 주요 메트릭 로깅 (AI 생성 시간, API 호출 성공률)
 
 ### 문서화
 
-- [ ] T133 [P] API 문서 업데이트 (Swagger UI 확인)
-- [ ] T134 [P] README.md 작성 (프로젝트 개요, 실행 방법)
-- [ ] T135 quickstart.md 검증 및 업데이트
-- [ ] T136 배포 가이드 작성 in docs/deployment.md
+- [x] T133 [P] API 문서 업데이트 (Swagger UI 확인)
+- [x] T134 [P] README.md 작성 (프로젝트 개요, 실행 방법)
+- [x] T135 quickstart.md 검증 및 업데이트
+- [x] T136 배포 가이드 작성 in docs/deployment.md
 
 ### 테스트 (선택사항 - 요청 시 작성)
 
-- [ ] T137 [P] 백엔드 통합 테스트 작성 (주요 API 엔드포인트)
-- [ ] T138 [P] 프론트엔드 E2E 테스트 작성 (Playwright) - 여행 생성 플로우
-- [ ] T139 외부 API 모킹 및 계약 테스트
+- [x] T137 [P] 백엔드 통합 테스트 작성 (주요 API 엔드포인트)
+- [x] T138 [P] 프론트엔드 E2E 테스트 작성 (Playwright) - 여행 생성 플로우
+- [x] T139 외부 API 모킹 및 계약 테스트
 
 ### 모바일 오프라인 지원 (아키텍처 분석 보고서 기반 추가)
 
-- [ ] T145 [P] Service Worker 캐싱 전략 (Cache First, Network First, Stale-While-Revalidate) in frontend/public/sw.js
-- [ ] T146 [P] IndexedDB 오프라인 스토리지 및 동기화 큐 in frontend/src/lib/offline-storage.ts
-- [ ] T147 [P] 네트워크 상태 감지 훅 (자동 동기화) in frontend/src/hooks/useNetworkStatus.ts
-- [ ] T148 [P] 지도 타일 오프라인 캐싱 (50MB 제한) in frontend/src/lib/map-offline.ts
+- [x] T145 [P] Service Worker 캐싱 전략 (Cache First, Network First, Stale-While-Revalidate) in frontend/public/sw.js
+- [x] T146 [P] IndexedDB 오프라인 스토리지 및 동기화 큐 in frontend/src/lib/offline-storage.ts
+- [x] T147 [P] 네트워크 상태 감지 훅 (자동 동기화) in frontend/src/hooks/useNetworkStatus.ts
+- [x] T148 [P] 지도 타일 오프라인 캐싱 (50MB 제한) in frontend/src/lib/map-offline.ts
 
 ### 토큰 저장 하이브리드 전략 (아키텍처 분석 보고서 기반 추가)
 
-- [ ] T149 [P] 플랫폼별 토큰 스토리지 (웹: httpOnly, PWA: 암호화, Capacitor: Native) in frontend/src/lib/token-storage.ts
-- [ ] T150 쿠키 기반 인증 백엔드 지원 (웹용 httpOnly 쿠키) in backend/src/api/v1/auth.py (업데이트)
+- [x] T149 [P] 플랫폼별 토큰 스토리지 (웹: httpOnly, PWA: 암호화, Capacitor: Native) in frontend/src/lib/token-storage.ts
+- [x] T150 쿠키 기반 인증 백엔드 지원 (웹용 httpOnly 쿠키) in backend/src/api/v1/auth.py (업데이트)
 
 ### 배포 준비
 

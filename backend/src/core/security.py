@@ -6,7 +6,7 @@ from datetime import datetime, timedelta
 from typing import Optional
 from jose import JWTError, jwt
 from passlib.context import CryptContext
-from fastapi import Depends, HTTPException, status
+from fastapi import Depends, HTTPException, Request, status
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 
 from ..config.settings import settings
@@ -15,7 +15,7 @@ from ..config.settings import settings
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 # HTTP Bearer token
-security = HTTPBearer()
+security = HTTPBearer(auto_error=False)
 
 
 def create_access_token(data: dict, expires_delta: Optional[timedelta] = None) -> str:
@@ -59,13 +59,26 @@ def verify_password(plain_password: str, hashed_password: str) -> bool:
 
 
 async def get_current_user_id(
-    credentials: HTTPAuthorizationCredentials = Depends(security),
+    request: Request,
+    credentials: HTTPAuthorizationCredentials | None = Depends(security),
 ) -> str:
     """
     Dependency to get current user ID from JWT token
     Usage: user_id: str = Depends(get_current_user_id)
     """
-    token = credentials.credentials
+    token: str | None = None
+
+    if credentials:
+        token = credentials.credentials
+    elif settings.SESSION_COOKIE_NAME in request.cookies:
+        token = request.cookies.get(settings.SESSION_COOKIE_NAME)
+
+    if not token:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Authentication credentials were not provided",
+        )
+
     payload = verify_token(token)
     user_id: str = payload.get("sub")
     if user_id is None:
@@ -73,4 +86,5 @@ async def get_current_user_id(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Could not validate credentials",
         )
+    request.state.user_id = user_id
     return user_id

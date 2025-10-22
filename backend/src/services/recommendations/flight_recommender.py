@@ -12,6 +12,7 @@ from uuid import UUID
 from sqlalchemy import delete, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from ...core.cache import cache_flight_quote, get_cached_flight_quote
 from ...models.flight_option import FlightOption
 from ...models.travel_plan import TravelPlan
 from ...integrations.skyscanner import get_skyscanner_client
@@ -77,9 +78,20 @@ class FlightRecommender:
         """Return flight options, generating them if needed"""
         origin = self._determine_origin(plan)
         destination = self._determine_destination(plan)
+        cache_key = (
+            f"{origin}:{destination}:{plan.start_date.isoformat()}:"
+            f"{plan.end_date.isoformat()}:{plan.traveler_count}"
+        )
 
         if force_refresh:
             await self._delete_existing(plan.id)
+        else:
+            cached_quote = await get_cached_flight_quote(cache_key)
+            if cached_quote:
+                existing = await self._fetch_existing(plan.id)
+                if existing:
+                    logger.info("Returning cached flight quote for %s", cache_key)
+                    return FlightRecommendationResult(origin, destination, existing)
 
         existing = await self._fetch_existing(plan.id)
         if existing:
@@ -140,6 +152,22 @@ class FlightRecommender:
         await self.session.commit()
         for option in options:
             await self.session.refresh(option)
+
+        cheapest = min(options, key=lambda opt: opt.price_amount, default=None)
+        if cheapest:
+            await cache_flight_quote(
+                cache_key,
+                {
+                    "origin": origin,
+                    "destination": destination,
+                    "departure_date": plan.start_date.isoformat(),
+                    "return_date": plan.end_date.isoformat(),
+                    "traveler_count": plan.traveler_count,
+                    "currency": cheapest.price_currency,
+                    "price_amount": cheapest.price_amount,
+                    "provider": cheapest.provider,
+                },
+            )
 
         return FlightRecommendationResult(origin, destination, options)
 

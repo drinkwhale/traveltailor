@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import './globals.css'
+import { AppProviders } from '@/components/providers/AppProviders'
 
 export const metadata: Metadata = {
   title: 'AI TravelTailor - 개인 맞춤형 여행 설계',
@@ -14,7 +15,7 @@ export default function RootLayout({
   return (
     <html lang="ko">
       <body className="antialiased">
-        {children}
+        <AppProviders>{children}</AppProviders>
       </body>
     </html>
   )

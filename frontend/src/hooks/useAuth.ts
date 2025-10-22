@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
-import type { User } from '@supabase/supabase-js'
+import posthog from 'posthog-js'
 import {
   signUp,
   signIn,
@@ -11,6 +11,7 @@ import {
   onAuthStateChange,
   type SignUpData,
   type SignInData,
+  type AuthUser,
 } from '@/lib/auth'
 
 /**
@@ -19,7 +20,7 @@ import {
  * 사용자 인증 상태 관리 및 인증 관련 함수 제공
  */
 export function useAuth() {
-  const [user, setUser] = useState<User | null>(null)
+  const [user, setUser] = useState<AuthUser | null>(null)
   const [loading, setLoading] = useState(true)
   const router = useRouter()
 
@@ -27,12 +28,20 @@ export function useAuth() {
     // 초기 사용자 로드
     getCurrentUser().then((currentUser) => {
       setUser(currentUser)
+      if (currentUser) {
+        posthog.identify(currentUser.id, { email: currentUser.email })
+      }
       setLoading(false)
     })
 
     // 인증 상태 변경 리스너
     const unsubscribe = onAuthStateChange((currentUser) => {
       setUser(currentUser)
+      if (currentUser) {
+        posthog.identify(currentUser.id, { email: currentUser.email })
+      } else {
+        posthog.reset()
+      }
       setLoading(false)
     })
 
@@ -53,6 +62,7 @@ export function useAuth() {
 
       if (newUser) {
         setUser(newUser)
+        posthog.identify(newUser.id, { email: newUser.email })
         router.push('/') // 홈으로 이동
       }
 
@@ -78,6 +88,7 @@ export function useAuth() {
 
       if (signedInUser) {
         setUser(signedInUser)
+        posthog.identify(signedInUser.id, { email: signedInUser.email })
         router.push('/') // 홈으로 이동
       }
 
@@ -102,6 +113,7 @@ export function useAuth() {
       }
 
       setUser(null)
+      posthog.reset()
       router.push('/login')
 
       return { error: null }

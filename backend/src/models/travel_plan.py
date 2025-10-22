@@ -18,6 +18,7 @@ from sqlalchemy import (
     CheckConstraint,
 )
 from sqlalchemy.dialects.postgresql import UUID, JSONB
+from sqlalchemy.ext.hybrid import hybrid_property
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
 
@@ -46,8 +47,8 @@ class TravelPlan(Base):
     country = Column(String(100), nullable=False)
     start_date = Column(Date, nullable=False)
     end_date = Column(Date, nullable=False)
-    total_days = Column(Integer, nullable=False)
-    total_nights = Column(Integer, nullable=False)
+    _total_days = Column("total_days", Integer, nullable=False)
+    _total_nights = Column("total_nights", Integer, nullable=False)
     budget_total = Column(Integer, nullable=False)
     budget_allocated = Column(Integer, nullable=True)
     budget_breakdown = Column(JSONB, nullable=True)
@@ -84,5 +85,36 @@ class TravelPlan(Base):
         cascade="all, delete-orphan",
         lazy="selectin",
     )
+
+    @hybrid_property
+    def total_days(self) -> int:
+        if self.start_date and self.end_date:
+            delta = (self.end_date - self.start_date).days + 1
+            return max(delta, 1)
+        return int(self._total_days or 1)
+
+    @total_days.setter
+    def total_days(self, value: int) -> None:
+        self._total_days = value
+
+    @total_days.expression  # type: ignore[no-redef]
+    def total_days(cls):
+        return func.greatest(
+            func.cast(func.date_part("day", cls.end_date - cls.start_date), Integer) + 1,
+            1,
+        )
+
+    @hybrid_property
+    def total_nights(self) -> int:
+        computed = self.total_days - 1
+        return max(computed, 0)
+
+    @total_nights.setter
+    def total_nights(self, value: int) -> None:
+        self._total_nights = value
+
+    @total_nights.expression  # type: ignore[no-redef]
+    def total_nights(cls):
+        return func.greatest(cls.total_days - 1, 0)
     def __repr__(self) -> str:
         return f"<TravelPlan {self.destination} {self.start_date}~{self.end_date}>"

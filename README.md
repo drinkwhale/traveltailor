@@ -19,7 +19,7 @@
    cp backend/.env.example backend/.env
    cp frontend/.env.local.example frontend/.env.local
    ```
-   필수 값: Supabase(PostgreSQL) URL/키, OpenAI API 키, Google Places/Mapbox/Skyscanner API 키, Booking.com 제휴 ID, Agoda API 키, 백엔드/프론트엔드 도메인.
+필수 값: Supabase(PostgreSQL) URL/키, OpenAI API 키, Google Places/Mapbox/Skyscanner API 키, Booking.com 제휴 ID, Agoda API 키, 백엔드/프론트엔드 도메인, Sentry DSN(선택), PostHog API Key(선택).
 3. **백엔드 의존성 설치 및 서버 실행**
    ```bash
    cd backend
@@ -32,8 +32,9 @@
 4. **프론트엔드 의존성 설치 및 개발 서버 실행**
    ```bash
    cd ../frontend
-   pnpm install                         # npm 사용 시 npm install
-   pnpm dev                             # http://localhost:3000
+  pnpm install                         # npm 사용 시 npm install
+  pnpm exec playwright install --with-deps
+  pnpm dev                             # http://localhost:3000
    ```
 
 ## 개발 플로우
@@ -64,6 +65,13 @@ flowchart LR
   pnpm exec playwright test            # 필요 시 E2E 테스트
   ```
 - **성능/운영**: AI 파이프라인 SLA(30초)를 검증할 성능 테스트 플랜은 `specs/001-ai-travel-planner/tasks.md`의 T126a에서 추적합니다.
+
+## 보안·관측 핵심
+- **Rate Limiting**: SlowAPI로 로그인/회원가입 5회/분, 그 외 글로벌 100회/분 제한.
+- **CSRF**: httpOnly 세션 쿠키와 `X-CSRF-Token` 헤더 조합. `/v1/csrf-token`에서 토큰 발급.
+- **Redis 캐시**: 장소/항공편 결과 TTL(15분/5분) 캐싱, PostGIS 공간 인덱스로 근접 검색 최적화.
+- **Sentry / PostHog**: `NEXT_PUBLIC_SENTRY_DSN`, `NEXT_PUBLIC_POSTHOG_KEY` 설정 시 자동 초기화. FastAPI는 `SENTRY_DSN`, `POSTHOG_API_KEY` 환경 변수로 활성화.
+- **오프라인 지원**: Service Worker(Cache First / Network First / Stale-While-Revalidate) + IndexedDB 큐로 동기화 재시도.
 
 ## 디렉터리 구조
 ```

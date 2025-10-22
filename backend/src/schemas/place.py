@@ -8,8 +8,9 @@ from datetime import time
 from typing import Literal
 from uuid import UUID
 
-from pydantic import BaseModel, Field
+from pydantic import Field, field_validator
 
+from .base import SanitizedModel
 
 PlaceCategory = Literal[
     "accommodation",
@@ -21,7 +22,7 @@ PlaceCategory = Literal[
 ]
 
 
-class PlaceBase(BaseModel):
+class PlaceBase(SanitizedModel):
     """Common fields for place objects"""
 
     name: str
@@ -40,6 +41,16 @@ class PlaceBase(BaseModel):
     opening_hours: dict | None = None
     photos: list[str] | None = None
     tags: list[str] | None = None
+
+    @field_validator("name")
+    @classmethod
+    def validate_name(cls, value: str) -> str:
+        cleaned = value.strip()
+        if not cleaned:
+            raise ValueError("name must not be empty")
+        if len(cleaned) > 150:
+            raise ValueError("name must be 150 characters or fewer")
+        return cleaned
 
 
 class PlaceCreate(PlaceBase):
@@ -60,7 +71,7 @@ class PlaceResponse(PlaceBase):
         from_attributes = True
 
 
-class ItineraryPlaceSummary(BaseModel):
+class ItineraryPlaceSummary(SanitizedModel):
     """Lightweight place representation within an itinerary"""
 
     id: UUID

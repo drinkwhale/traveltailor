@@ -8,6 +8,7 @@ from typing import Iterable
 
 from ...config.settings import settings
 from ...integrations.google_maps import get_google_maps_client
+from ...core.cache import cache_place, get_cached_place
 from ...schemas.place import PlaceCreate
 from ...schemas.travel_plan import TravelPlanCreate
 from ..ai.preference_analyzer import AnalyzedPreferences
@@ -340,26 +341,32 @@ class PlacesRecommender:
                 bundle.warnings.append("일부 장소 데이터를 가져오지 못했습니다.")
                 continue
             for item in result[:2]:
+                place_id = item.get("place_id")
+                cached = await get_cached_place(place_id) if place_id else None
+                payload = cached or item
+                if not cached and place_id:
+                    await cache_place(place_id, payload)
+
                 bundle.activities.append(
                     PlaceCreate(
-                        name=item.get("name", "Curated Spot"),
+                        name=payload.get("name", "Curated Spot"),
                         category="attraction",
-                        latitude=item.get("geometry", {})
+                        latitude=payload.get("geometry", {})
                         .get("location", {})
                         .get("lat", 0.0),
-                        longitude=item.get("geometry", {})
+                        longitude=payload.get("geometry", {})
                         .get("location", {})
                         .get("lng", 0.0),
-                        address=item.get("formatted_address"),
+                        address=payload.get("formatted_address"),
                         city=plan.destination,
                         country=plan.country,
-                        rating=item.get("rating"),
-                        price_level=item.get("price_level"),
-                        photos=[photo.get("photo_reference") for photo in item.get("photos", [])]
-                        if item.get("photos")
+                        rating=payload.get("rating"),
+                        price_level=payload.get("price_level"),
+                        photos=[photo.get("photo_reference") for photo in payload.get("photos", [])]
+                        if payload.get("photos")
                         else None,
                         tags=["google"],
-                        external_id=item.get("place_id"),
+                        external_id=place_id,
                         external_source="google_places",
                     )
                 )

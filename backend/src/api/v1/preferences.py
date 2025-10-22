@@ -10,6 +10,7 @@ from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from ...config.database import get_db
+from ...core.csrf import require_csrf_token
 from ...core.security import get_current_user_id
 from ...models.user_preference import UserPreference
 from ...schemas.base import ApiResponse
@@ -111,7 +112,12 @@ async def get_preferences(
     return ApiResponse(success=True, data=response)
 
 
-@router.put("", response_model=ApiResponse[UserPreferenceResponse], status_code=status.HTTP_200_OK)
+@router.put(
+    "",
+    response_model=ApiResponse[UserPreferenceResponse],
+    status_code=status.HTTP_200_OK,
+    dependencies=[Depends(require_csrf_token)],
+)
 async def update_preferences(
     payload: UserPreferenceUpdate,
     user_id: str = Depends(get_current_user_id),

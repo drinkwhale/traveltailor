@@ -1,16 +1,18 @@
-import { supabase } from './supabase'
-import type { User, Session, AuthError } from '@supabase/supabase-js'
+import { apiClient } from './api'
+import { storeToken, clearToken, detectStrategy } from './token-storage'
 
-/**
- * 인증 서비스
- *
- * Supabase Auth를 사용한 사용자 인증 관리
- */
+export interface AuthUser {
+  id: string
+  email: string
+  full_name?: string | null
+  subscription_tier: string
+  created_at: string
+}
 
 export interface SignUpData {
   email: string
   password: string
-  name?: string
+  full_name?: string
 }
 
 export interface SignInData {
@@ -19,105 +21,78 @@ export interface SignInData {
 }
 
 export interface AuthResponse {
-  user: User | null
-  session: Session | null
-  error: AuthError | null
+  user: AuthUser | null
+  error: Error | null
 }
 
-/**
- * 회원가입
- */
-export async function signUp({ email, password, name }: SignUpData): Promise<AuthResponse> {
-  const { data, error } = await supabase.auth.signUp({
-    email,
-    password,
-    options: {
-      data: {
-        name: name || email.split('@')[0], // 이름이 없으면 이메일의 앞부분 사용
-      },
-    },
-  })
+type Listener = (user: AuthUser | null) => void
 
-  return {
-    user: data.user,
-    session: data.session,
-    error,
+let currentUser: AuthUser | null = null
+const listeners = new Set<Listener>()
+
+function notify(user: AuthUser | null) {
+  currentUser = user
+  listeners.forEach((listener) => listener(user))
+}
+
+async function persistToken(accessToken: string) {
+  if (detectStrategy() === 'cookie') {
+    return
+  }
+  await storeToken(accessToken)
+}
+
+export async function signUp(payload: SignUpData): Promise<AuthResponse> {
+  try {
+    const { data } = await apiClient.post<{ access_token: string }>('/v1/auth/signup', payload)
+    await persistToken(data.access_token)
+    const user = await getCurrentUser()
+    notify(user)
+    return { user, error: null }
+  } catch (error) {
+    return { user: null, error: error as Error }
   }
 }
 
-/**
- * 로그인
- */
-export async function signIn({ email, password }: SignInData): Promise<AuthResponse> {
-  const { data, error } = await supabase.auth.signInWithPassword({
-    email,
-    password,
-  })
-
-  return {
-    user: data.user,
-    session: data.session,
-    error,
+export async function signIn(payload: SignInData): Promise<AuthResponse> {
+  try {
+    const { data } = await apiClient.post<{ access_token: string }>('/v1/auth/login', payload)
+    await persistToken(data.access_token)
+    const user = await getCurrentUser()
+    notify(user)
+    return { user, error: null }
+  } catch (error) {
+    return { user: null, error: error as Error }
   }
 }
 
-/**
- * 로그아웃
- */
-export async function signOut(): Promise<{ error: AuthError | null }> {
-  const { error } = await supabase.auth.signOut()
-  return { error }
+export async function signOut(): Promise<{ error: Error | null }> {
+  try {
+    await apiClient.post('/v1/auth/logout')
+    await clearToken()
+    notify(null)
+    return { error: null }
+  } catch (error) {
+    return { error: error as Error }
+  }
 }
 
-/**
- * 현재 사용자 정보 가져오기
- */
-export async function getCurrentUser(): Promise<User | null> {
-  const {
-    data: { user },
-  } = await supabase.auth.getUser()
-  return user
+export async function getCurrentUser(): Promise<AuthUser | null> {
+  try {
+    const { data } = await apiClient.get<{ data: AuthUser }>('/v1/auth/me')
+    const user = data?.data ?? null
+    if (user) {
+      notify(user)
+    }
+    return user
+  } catch {
+    notify(null)
+    return null
+  }
 }
 
-/**
- * 현재 세션 가져오기
- */
-export async function getCurrentSession(): Promise<Session | null> {
-  const {
-    data: { session },
-  } = await supabase.auth.getSession()
-  return session
-}
-
-/**
- * 비밀번호 재설정 이메일 전송
- */
-export async function sendPasswordResetEmail(email: string): Promise<{ error: AuthError | null }> {
-  const { error } = await supabase.auth.resetPasswordForEmail(email, {
-    redirectTo: `${window.location.origin}/reset-password`,
-  })
-  return { error }
-}
-
-/**
- * 비밀번호 업데이트
- */
-export async function updatePassword(newPassword: string): Promise<{ error: AuthError | null }> {
-  const { error } = await supabase.auth.updateUser({
-    password: newPassword,
-  })
-  return { error }
-}
-
-/**
- * 인증 상태 변경 리스너 등록
- */
-export function onAuthStateChange(callback: (user: User | null) => void) {
-  const {
-    data: { subscription },
-  } = supabase.auth.onAuthStateChange((_event, session) => {
-    callback(session?.user ?? null)
-  })
-
-  return () => subscription.unsubscribe()
+export function onAuthStateChange(listener: Listener) {
+  listeners.add(listener)
+  listener(currentUser)
+  return () => listeners.delete(listener)
 }

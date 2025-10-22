@@ -2,10 +2,22 @@
 Base schemas for API responses
 """
 
-from pydantic import BaseModel
-from typing import Generic, TypeVar, Optional
+from typing import Generic, Optional, TypeVar, Any
+
+from pydantic import BaseModel, model_validator
+
+from ..utils.sanitizer import sanitize_payload
 
 T = TypeVar("T")
+
+
+class SanitizedModel(BaseModel):
+    """Mixin that sanitises incoming payloads to mitigate injection/XSS."""
+
+    @model_validator(mode="before")
+    @classmethod
+    def _sanitize(cls, values: Any) -> Any:
+        return sanitize_payload(values)
 
 
 class ApiResponse(BaseModel, Generic[T]):

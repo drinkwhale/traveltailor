@@ -10,15 +10,14 @@ T032b: CSRF 보호 설정
 import logging
 from typing import Optional, Set
 
-from fastapi import HTTPException, Request
+from fastapi import Depends, HTTPException, Request
 from fastapi_csrf_protect import CsrfProtect
 from fastapi_csrf_protect.exceptions import CsrfProtectError
 from pydantic import BaseModel
 
-from src.config.settings import get_settings
+from ..config.settings import settings
 
 logger = logging.getLogger(__name__)
-settings = get_settings()
 
 
 class CsrfSettings(BaseModel):
@@ -27,17 +26,18 @@ class CsrfSettings(BaseModel):
     secret_key: str = settings.SECRET_KEY
     cookie_name: str = "csrf_token"
     header_name: str = "X-CSRF-Token"
-    cookie_secure: bool = settings.ENVIRONMENT == "production"
+    cookie_secure: bool = settings.APP_ENV == "production"
     cookie_httponly: bool = True
-    cookie_samesite: str = "lax"
+    cookie_samesite: str = settings.SESSION_COOKIE_SAMESITE
     token_location: str = "header"  # or "body"
 
 
 # CSRF 보호 제외 경로 (API 키 인증 등)
 CSRF_EXEMPT_PATHS: Set[str] = {
-    "/api/v1/auth/login",
-    "/api/v1/auth/signup",
-    "/api/v1/auth/refresh",
+    "/v1/auth/login",
+    "/v1/auth/signup",
+    "/v1/auth/refresh",
+    "/v1/auth/logout",
     "/health",
     "/docs",
     "/openapi.json",
@@ -173,7 +173,7 @@ async def csrf_protect_middleware(request: Request, call_next):
 # 의존성 주입용 CSRF 검증 함수
 async def require_csrf_token(
     request: Request,
-    csrf_protect: CsrfProtect = None,
+    csrf_protect: CsrfProtect = Depends(),
 ) -> None:
     """
     CSRF 토큰 필수 검증 (의존성 주입용)
@@ -190,9 +190,6 @@ async def require_csrf_token(
     Raises:
         HTTPException: CSRF 토큰 검증 실패 시
     """
-    if csrf_protect is None:
-        csrf_protect = CsrfProtect()
-
     await validate_csrf_token(request, csrf_protect)
 
 
