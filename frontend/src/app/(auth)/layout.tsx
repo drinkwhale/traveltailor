@@ -1,3 +1,4 @@
+import Link from 'next/link'
 import { ReactNode } from 'react'
 
 /**
@@ -14,8 +15,16 @@ export default function AuthLayout({ children }: { children: ReactNode }) {
             <h1 className="text-2xl font-bold text-gray-900">
               AI TravelTailor
             </h1>
-            <nav className="flex gap-4">
-              {/* 네비게이션 링크는 추후 추가 */}
+            <nav className="flex gap-4 text-sm text-slate-600">
+              <Link href="/create" className="hover:text-indigo-600">
+                일정 생성
+              </Link>
+              <Link href="/history" className="hover:text-indigo-600">
+                여행 히스토리
+              </Link>
+              <Link href="/preferences" className="hover:text-indigo-600">
+                선호도 설정
+              </Link>
             </nav>
           </div>
         </div>

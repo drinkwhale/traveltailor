@@ -26,6 +26,7 @@ from .cache import AIResponseCache, cache
 from .preference_analyzer import AnalyzedPreferences, PreferenceAnalyzer
 from .timeline_generator import TimelineGenerator
 from .types import DailyItineraryDraft, TravelPlanDraft
+from ..preferences.auto_updater import PreferenceAutoUpdater
 
 
 class TravelPlanner:
@@ -254,6 +255,9 @@ class TravelPlanner:
 
         plan.status = "completed"
         plan.generation_time_seconds = round(perf_counter() - start, 2)
+
+        updater = PreferenceAutoUpdater(self.session)
+        await updater.sync_from_history(user_id)
 
         await self.session.commit()
         await self.session.refresh(plan)

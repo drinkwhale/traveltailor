@@ -62,10 +62,10 @@ apiClient.interceptors.response.use(
         // 토큰 갱신 시도
         const {
           data: { session },
-          error: refreshError,
+          error: _refreshError,
         } = await supabase.auth.refreshSession()
 
-        if (refreshError || !session) {
+        if (_refreshError || !session) {
           // 토큰 갱신 실패 시 로그아웃
           await supabase.auth.signOut()
           window.location.href = '/login'
@@ -78,7 +78,7 @@ apiClient.interceptors.response.use(
         }
 
         return apiClient(originalRequest)
-      } catch (refreshError) {
+      } catch (_refreshError) {
         // 갱신 실패
         await supabase.auth.signOut()
         window.location.href = '/login'

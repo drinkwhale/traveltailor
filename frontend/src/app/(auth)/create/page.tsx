@@ -7,9 +7,16 @@ import { DailyTimeline } from '@/components/timeline/DailyTimeline'
 import { ProgressIndicator } from '@/components/ui/ProgressIndicator'
 import { BudgetSummary } from '@/components/budget/BudgetSummary'
 import { useTravelPlan } from '@/hooks/useTravelPlan'
+import { usePreferences } from '@/hooks/usePreferences'
 
 export default function CreatePlanPage() {
   const { plan, status, warnings, isLoading, error, createPlan, reset } = useTravelPlan()
+  const {
+    preferences: preferenceState,
+    isLoading: isPrefLoading,
+    error: preferenceError,
+  } = usePreferences()
+  const preferenceDefaults = isPrefLoading ? null : preferenceState
 
   return (
     <div className="mx-auto flex max-w-6xl flex-col gap-10 py-12">
@@ -18,6 +25,9 @@ export default function CreatePlanPage() {
         <p className="text-sm text-slate-600">
           여행 정보를 입력하면 TravelTailor가 숙소, 맛집, 관광지, 동선까지 포함한 맞춤 일정을 만들어드립니다.
         </p>
+        {preferenceError ? (
+          <p className="text-xs text-red-500">선호도를 불러오지 못했습니다. 기본값으로 계속 진행합니다.</p>
+        ) : null}
       </header>
 
       <TravelPlanForm
@@ -25,6 +35,7 @@ export default function CreatePlanPage() {
         isSubmitting={isLoading}
         errorMessage={error}
         warnings={warnings}
+        preferenceDefaults={preferenceDefaults}
       />
 
       {plan ? (
@@ -72,4 +83,3 @@ export default function CreatePlanPage() {
     </div>
   )
 }
-
