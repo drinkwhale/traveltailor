@@ -1,0 +1,58 @@
+services:
+  - type: web
+    name: traveltailor-backend
+    env: python
+    rootDir: backend
+    region: oregon
+    plan: starter
+    autoDeploy: true
+    buildFilter:
+      paths:
+        - backend/**
+    buildCommand: |
+      pip install --upgrade pip
+      pip install .
+    startCommand: uvicorn src.main:app --host 0.0.0.0 --port 8000
+    healthCheckPath: /health
+    postDeployCommand: alembic upgrade head
+    envVars:
+      - key: APP_ENV
+        value: production
+      - key: DEBUG
+        value: "False"
+      - key: SECRET_KEY
+        sync: false
+      - key: DATABASE_URL
+        sync: false
+      - key: REDIS_URL
+        sync: false
+      - key: SUPABASE_URL
+        sync: false
+      - key: SUPABASE_KEY
+        sync: false
+      - key: SUPABASE_SERVICE_KEY
+        sync: false
+      - key: JWT_SECRET_KEY
+        sync: false
+      - key: OPENAI_API_KEY
+        sync: false
+      - key: LANGCHAIN_API_KEY
+        sync: false
+      - key: GOOGLE_MAPS_API_KEY
+        sync: false
+      - key: MAPBOX_ACCESS_TOKEN
+        sync: false
+      - key: SKYSCANNER_API_KEY
+        sync: false
+      - key: BOOKING_COM_AFFILIATE_ID
+        sync: false
+      - key: AGODA_API_KEY
+        sync: false
+      - key: SENTRY_DSN
+        sync: false
+      - key: POSTHOG_API_KEY
+        sync: false
+      - key: ALLOWED_ORIGINS
+        value: https://traveltailor.vercel.app
+      - key: SESSION_COOKIE_DOMAIN
+        value: traveltailor.vercel.app

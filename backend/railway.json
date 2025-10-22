@@ -1,0 +1,64 @@
+{
+  "$schema": "https://railway.app/railway.schema.json",
+  "project": {
+    "name": "traveltailor-backend"
+  },
+  "plugins": [
+    {
+      "name": "postgresql"
+    },
+    {
+      "name": "redis"
+    }
+  ],
+  "environments": [
+    {
+      "name": "production",
+      "variables": {
+        "APP_ENV": "production",
+        "DEBUG": "False",
+        "ALLOWED_ORIGINS": "https://traveltailor.vercel.app",
+        "SESSION_COOKIE_DOMAIN": "traveltailor.vercel.app"
+      }
+    }
+  ],
+  "services": [
+    {
+      "name": "api",
+      "source": {
+        "rootDirectory": "backend",
+        "buildCommand": "pip install --upgrade pip && pip install .",
+        "startCommand": "uvicorn src.main:app --host 0.0.0.0 --port 8000"
+      },
+      "healthcheck": {
+        "path": "/health",
+        "interval": 30,
+        "timeout": 10,
+        "gracePeriod": 300
+      },
+      "deploy": {
+        "restartPolicy": "on-failure",
+        "postDeployCommands": [
+          "alembic upgrade head"
+        ]
+      },
+      "variables": {
+        "DATABASE_URL": null,
+        "REDIS_URL": null,
+        "SUPABASE_URL": null,
+        "SUPABASE_KEY": null,
+        "SUPABASE_SERVICE_KEY": null,
+        "JWT_SECRET_KEY": null,
+        "OPENAI_API_KEY": null,
+        "LANGCHAIN_API_KEY": null,
+        "GOOGLE_MAPS_API_KEY": null,
+        "MAPBOX_ACCESS_TOKEN": null,
+        "SKYSCANNER_API_KEY": null,
+        "BOOKING_COM_AFFILIATE_ID": null,
+        "AGODA_API_KEY": null,
+        "SENTRY_DSN": null,
+        "POSTHOG_API_KEY": null
+      }
+    }
+  ]
+}

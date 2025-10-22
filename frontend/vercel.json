@@ -1,0 +1,42 @@
+{
+  "version": 2,
+  "framework": "nextjs",
+  "installCommand": "npm ci",
+  "buildCommand": "npm run build",
+  "env": {
+    "NEXT_PUBLIC_POSTHOG_HOST": "https://app.posthog.com"
+  },
+  "build": {
+    "env": {
+      "NEXT_PUBLIC_API_URL": "@production_api_url",
+      "NEXT_PUBLIC_SENTRY_DSN": "@sentry_dsn",
+      "NEXT_PUBLIC_POSTHOG_KEY": "@posthog_public_key",
+      "NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN": "@mapbox_access_token"
+    }
+  },
+  "rewrites": [
+    {
+      "source": "/api/:path*",
+      "destination": "https://backend.traveltailor.com/:path*"
+    }
+  ],
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
+        {
+          "key": "Strict-Transport-Security",
+          "value": "max-age=63072000; includeSubDomains; preload"
+        },
+        {
+          "key": "X-Frame-Options",
+          "value": "DENY"
+        },
+        {
+          "key": "Referrer-Policy",
+          "value": "strict-origin-when-cross-origin"
+        }
+      ]
+    }
+  ]
+}
