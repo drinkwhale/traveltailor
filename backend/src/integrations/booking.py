@@ -6,7 +6,7 @@ from __future__ import annotations
 
 import logging
 import re
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from datetime import date
 from typing import Mapping
 from urllib.parse import urlencode
@@ -30,8 +30,8 @@ def _slugify(value: str) -> str:
 class BookingAffiliateClient:
     """Helper for generating Booking.com deep links with affiliate tracking"""
 
-    tracker: AffiliateTracker = affiliate_tracker
-    partner_id: str | None = settings.BOOKING_COM_AFFILIATE_ID
+    tracker: AffiliateTracker = field(default_factory=lambda: affiliate_tracker)
+    partner_id: str | None = field(default_factory=lambda: settings.BOOKING_COM_AFFILIATE_ID)
 
     def build_hotel_link(
         self,
