@@ -6,7 +6,7 @@ OpenAI 및 LangChain을 사용한 AI 기반 여행 계획 서비스
 
 from typing import Optional
 from langchain_openai import ChatOpenAI
-from langchain.schema import HumanMessage, SystemMessage, AIMessage
+from langchain_core.messages import HumanMessage, SystemMessage, AIMessage
 from ...config import settings
 
 

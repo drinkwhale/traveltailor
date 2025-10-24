@@ -12,11 +12,11 @@ from uuid import UUID
 from sqlalchemy import delete, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from ...core.affiliate_tracker import affiliate_tracker
 from ...core.cache import cache_flight_quote, get_cached_flight_quote
+from ...integrations.amadeus import get_amadeus_client
 from ...models.flight_option import FlightOption
 from ...models.travel_plan import TravelPlan
-from ...integrations.skyscanner import get_skyscanner_client
-from ...core.affiliate_tracker import affiliate_tracker
 
 logger = logging.getLogger(__name__)
 
@@ -67,7 +67,7 @@ class FlightRecommender:
 
     def __init__(self, session: AsyncSession) -> None:
         self.session = session
-        self.client = get_skyscanner_client()
+        self.client = get_amadeus_client()
 
     async def get_recommendations(
         self,
@@ -126,11 +126,11 @@ class FlightRecommender:
             )
             tracked_url = affiliate_tracker.build_link(
                 booking_url,
-                extra={"provider": "skyscanner"},
+                extra={"provider": "amadeus"},
             )
             option = FlightOption(
                 travel_plan_id=plan.id,
-                provider=item.get("provider", "Skyscanner"),
+                provider=item.get("provider", "Amadeus"),
                 carrier=item.get("carrier", "Unknown Carrier"),
                 flight_number=item.get("flight_number", "XX000"),
                 departure_airport=item.get("departure_airport", origin),
@@ -180,7 +180,9 @@ class FlightRecommender:
         return list(result.scalars().all())
 
     async def _delete_existing(self, plan_id: UUID) -> None:
-        await self.session.execute(delete(FlightOption).where(FlightOption.travel_plan_id == plan_id))
+        await self.session.execute(
+            delete(FlightOption).where(FlightOption.travel_plan_id == plan_id)
+        )
         await self.session.commit()
 
     def _determine_origin(self, plan: TravelPlan) -> str:
@@ -218,9 +220,9 @@ class FlightRecommender:
         return_date: date,
         travelers: int,
     ) -> str:
+        # Amadeus doesn't provide direct booking URLs, so we use Google Flights as fallback
         return (
-            "https://www.skyscanner.net/transport/flights/"
-            f"{origin.lower()}/{destination.lower()}/"
-            f"{departure_date.strftime('%y%m%d')}/{return_date.strftime('%y%m%d')}/"
-            f"?adults={travelers}"
+            "https://www.google.com/travel/flights/"
+            f"?q=Flights%20from%20{origin}%20to%20{destination}%20on%20"
+            f"{departure_date.isoformat()}%20through%20{return_date.isoformat()}"
         )

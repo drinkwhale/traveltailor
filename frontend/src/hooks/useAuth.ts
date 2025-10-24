@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
-import posthog from 'posthog-js'
+import { identifyUser, resetUser } from '@/lib/analytics/posthog'
 import {
   signUp,
   signIn,
@@ -29,7 +29,7 @@ export function useAuth() {
     getCurrentUser().then((currentUser) => {
       setUser(currentUser)
       if (currentUser) {
-        posthog.identify(currentUser.id, { email: currentUser.email })
+        identifyUser(currentUser.id, { email: currentUser.email })
       }
       setLoading(false)
     })
@@ -38,9 +38,9 @@ export function useAuth() {
     const unsubscribe = onAuthStateChange((currentUser) => {
       setUser(currentUser)
       if (currentUser) {
-        posthog.identify(currentUser.id, { email: currentUser.email })
+        identifyUser(currentUser.id, { email: currentUser.email })
       } else {
-        posthog.reset()
+        resetUser()
       }
       setLoading(false)
     })
@@ -62,7 +62,7 @@ export function useAuth() {
 
       if (newUser) {
         setUser(newUser)
-        posthog.identify(newUser.id, { email: newUser.email })
+        identifyUser(newUser.id, { email: newUser.email })
         router.push('/') // 홈으로 이동
       }
 
@@ -88,7 +88,7 @@ export function useAuth() {
 
       if (signedInUser) {
         setUser(signedInUser)
-        posthog.identify(signedInUser.id, { email: signedInUser.email })
+        identifyUser(signedInUser.id, { email: signedInUser.email })
         router.push('/') // 홈으로 이동
       }
 
@@ -113,7 +113,7 @@ export function useAuth() {
       }
 
       setUser(null)
-      posthog.reset()
+      resetUser()
       router.push('/login')
 
       return { error: null }
