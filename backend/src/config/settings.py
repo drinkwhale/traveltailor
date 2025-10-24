@@ -35,7 +35,8 @@ class Settings(BaseSettings):
     # External APIs
     GOOGLE_MAPS_API_KEY: str
     MAPBOX_ACCESS_TOKEN: str
-    SKYSCANNER_API_KEY: str = ""
+    AMADEUS_API_KEY: str = ""
+    AMADEUS_API_SECRET: str = ""
     BOOKING_COM_AFFILIATE_ID: str = ""
     AGODA_API_KEY: str = ""
 

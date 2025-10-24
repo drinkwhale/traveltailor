@@ -7,7 +7,7 @@ AI TravelTailor가 의존하는 외부 API의 계약 상태, 키 관리, 및 호
 | Google Places | `GOOGLE_MAPS_API_KEY` | Active (Production key in Supabase Vault) | 도메인/서버 IP 제한 적용, 지도/Places 공용 프로젝트와 분리됨 |
 | OpenAI | `OPENAI_API_KEY` | Active (Org: traveltailor-ai) | Usage cap 월 $300, rate-limit 5 RPS (gpt-4o-mini) |
 | Mapbox | `MAPBOX_ACCESS_TOKEN` | Active (Team tier) | 스타일 토큰은 Frontend `.env.local`에서 별도 scope 사용 |
-| Skyscanner Flights | `SKYSCANNER_API_KEY` | Sandbox (계약 심사 중) | Rapid API 파트너 샌드박스 키 사용, 일 100 호출 제한 |
+| Amadeus Flights | `AMADEUS_API_KEY`, `AMADEUS_API_SECRET` | Test (무료 티어) | Flight Offers Search API 사용, 월 2,000 트랜잭션 무료 |
 | Booking.com Affiliate | `BOOKING_COM_AFFILIATE_ID` | Pending (제휴 승인 대기) | 승인 완료 시 예약 링크 트래킹, 현재 테스트용 `demo` ID |
 | Agoda | `AGODA_API_KEY` | Sandbox (파트너 토큰) | Mock 응답 기반 개발, 월 500 호출 제한 |
 | Supabase | `SUPABASE_URL`, `SUPABASE_KEY`, `SUPABASE_SERVICE_KEY` | Active | Service role 키는 백엔드만 사용, row-level security 활성화 |
@@ -17,7 +17,7 @@ AI TravelTailor가 의존하는 외부 API의 계약 상태, 키 관리, 및 호
 - 모든 비공개 키는 1Password `AI TravelTailor / Production` 볼트에 저장합니다.
 - 로컬 개발 시 `.env.example`, `.env.local.example`를 복사 후 개인 키를 입력합니다. 실제 키 커밋 금지.
 - 반기(6개월)마다 키 재발급을 진행하고, 변경 사항을 이 문서와 `docs/deployment-checklist.md`에 반영합니다.
-- Skyscanner/Agoda 키와 Booking 제휴 ID는 `TravelTailor / Partnerships` 금고에 복제 보관하며, 테스트 키와 운영 키를 명확히 구분합니다.
+- Amadeus/Agoda 키와 Booking 제휴 ID는 `TravelTailor / Partnerships` 금고에 복제 보관하며, 테스트 키와 운영 키를 명확히 구분합니다.
 
 ## 계약 상태 체크리스트
 
@@ -35,7 +35,7 @@ AI TravelTailor가 의존하는 외부 API의 계약 상태, 키 관리, 및 호
 | Google Place Photos | $7.00 / 1000 calls | 5,000 call/일 | ~$1,050 | 썸네일 이미지만 로드 |
 | OpenAI gpt-4o-mini | $0.15 / 1M input tokens<br>$0.60 / 1M output tokens | 200K in / 80K out tokens/일 | ~$162 | 1 플랜당 15K/6K 토큰 가정 |
 | Mapbox Tiles | $0.50 / 1k map loads | 1,500 load/일 | ~$225 | 사용자 일정 조회 대비 5뷰/플랜 |
-| Skyscanner Flights API | $0.035 / call (estimate) | 500 call/일 | ~$525 | 1 플랜당 3 옵션, 캐시 미스 비율 50% 가정 |
+| Amadeus Flight Offers | Free (Test tier) | 500 call/일 | $0 | 월 2,000 트랜잭션 무료, Production 전환 시 유료 ($0.025/call) |
 | Agoda Affiliate API | Revenue share (5%) | 300 call/일 | N/A | 제휴 확정 후 실매출 기반 수수료 정산 |
 | Supabase Auth + DB | 포함 (Pro 플랜 $25/월) | 8GB 저장, 5M 요청 | $25 | 초과 시 자동 업그레이드 옵션 |
 
