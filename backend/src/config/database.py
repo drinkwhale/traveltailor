@@ -13,10 +13,12 @@ from .settings import settings
 database_url = settings.DATABASE_URL.replace("postgresql://", "postgresql+asyncpg://")
 
 # Create async engine
+# Supabase Transaction mode pooler requires statement_cache_size=0
 engine = create_async_engine(
     database_url,
     echo=settings.DEBUG,
     future=True,
+    connect_args={"statement_cache_size": 0},
 )
 
 # Create async session factory
