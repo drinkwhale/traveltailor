@@ -10,8 +10,9 @@ interface Props {
 }
 
 const SENTRY_DSN = process.env.NEXT_PUBLIC_SENTRY_DSN
-const POSTHOG_KEY = process.env.NEXT_PUBLIC_POSTHOG_KEY
-const POSTHOG_HOST = process.env.NEXT_PUBLIC_POSTHOG_HOST || 'https://app.posthog.com'
+// PostHog는 현재 Node.js 모듈 충돌로 인해 비활성화됨
+// const POSTHOG_KEY = process.env.NEXT_PUBLIC_POSTHOG_KEY
+// const POSTHOG_HOST = process.env.NEXT_PUBLIC_POSTHOG_HOST || 'https://app.posthog.com'
 
 export function AppProviders({ children }: Props) {
   useEffect(() => {
