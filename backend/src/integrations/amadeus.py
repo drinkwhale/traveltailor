@@ -255,12 +255,24 @@ class AmadeusClient:
 
     @staticmethod
     def _parse_datetime(dt_str: str | None) -> datetime:
-        """Parse ISO datetime string"""
+        """
+        Parse ISO datetime string and ensure timezone-aware datetime
+
+        Amadeus API may return timestamps without timezone offset (e.g., "2024-11-03T10:45:00").
+        We default to UTC to ensure compatibility with PostgreSQL DateTime(timezone=True) columns.
+        """
         if not dt_str:
             return datetime.now(timezone.utc)
         try:
-            # Amadeus uses ISO 8601 format: 2024-10-24T14:30:00
-            return datetime.fromisoformat(dt_str.replace("Z", "+00:00"))
+            # Amadeus uses ISO 8601 format: 2024-10-24T14:30:00 or 2024-10-24T14:30:00Z
+            # Replace 'Z' with '+00:00' for proper ISO parsing
+            dt = datetime.fromisoformat(dt_str.replace("Z", "+00:00"))
+
+            # If the datetime is naive (no tzinfo), assume UTC
+            if dt.tzinfo is None:
+                dt = dt.replace(tzinfo=timezone.utc)
+
+            return dt
         except Exception:
             return datetime.now(timezone.utc)
 
