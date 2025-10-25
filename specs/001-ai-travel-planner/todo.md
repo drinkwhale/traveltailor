@@ -36,6 +36,33 @@
 
 ## 🟡 우선순위: 중간
 
+### 데이터베이스 연결 전략 및 초기화 개선
+**관련 PR**: [#13 - ALLOWED_ORIGINS 파싱 오류 및 pgbouncer 호환성 개선](https://github.com/drinkwhale/traveltailor/pull/13)
+**현재 상태**: prepared statement 이슈 임시 해결 (statement_cache_size=0), init_db() 비활성화
+**목적**: 데이터베이스 연결 성능 최적화 및 안정성 향상
+
+**작업 항목**:
+- [ ] **데이터베이스 연결 전략 검토**
+  - Supabase 직접 연결 (port 5432) vs pooler (port 6543) 성능 비교
+  - pgbouncer `pool_mode` 설정 검토 (transaction → session 변경 고려)
+  - asyncpg 네이티브 connection pool 구현 검토 (pgbouncer 대체)
+  - statement_cache_size=0 설정의 성능 영향 측정
+- [ ] **init_db() 함수 재활성화**
+  - 데이터베이스 연결 안정화 후 init_db() 재활성화
+  - Alembic 마이그레이션 구현 우선 (자동 테이블 생성 전)
+  - init_db() 필요성 재평가 (마이그레이션 설정 후)
+  - `backend/src/config/database.py`의 TODO 주석 처리
+- [ ] **프로덕션 환경 검증**
+  - 프로덕션 환경에서 prepared statement 이슈 재현 테스트
+  - 연결 풀링 설정 성능 테스트
+  - 프로덕션 도메인 CORS 설정 추가
+  - 모니터링 및 알림 설정 (connection pool exhaustion)
+
+**예상 작업 시간**: 4-6시간
+**담당자**: TBD
+
+---
+
 ### 항공편 추천 기능 개선
 **관련 PR**: [#9 - Skyscanner → Amadeus 마이그레이션](https://github.com/drinkwhale/traveltailor/pull/9#issue-3547446200)
 **현재 상태**: Amadeus Test API 사용 중 (월 2,000 트랜잭션 무료)
@@ -134,5 +161,5 @@
 
 ---
 
-**마지막 업데이트**: 2025-10-24
+**마지막 업데이트**: 2025-10-26
 **다음 검토 예정**: TBD
