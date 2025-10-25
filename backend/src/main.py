@@ -24,7 +24,7 @@ from slowapi.middleware import SlowAPIMiddleware
 
 from .api.dependencies import limiter
 from .api.v1 import auth, exports, preferences, recommendations, travel_plans
-from .config.database import close_db, init_db
+from .config.database import close_db  # init_db temporarily disabled
 from .config.settings import settings
 from .core.cache import close_redis_client
 from .core.csrf import CsrfTokenResponse, get_csrf_token_endpoint
@@ -59,7 +59,9 @@ async def lifespan(app: FastAPI):
     """Application lifespan events"""
     # Startup
     posthog_client: Posthog | None = None
-    await init_db()
+    # Temporarily disabled due to pgbouncer prepared statement issue
+    # TODO: Re-enable after fixing database pooler configuration
+    # await init_db()
     if settings.POSTHOG_API_KEY:
         posthog_client = Posthog(api_key=settings.POSTHOG_API_KEY, host=settings.POSTHOG_HOST)
         app.state.posthog = posthog_client

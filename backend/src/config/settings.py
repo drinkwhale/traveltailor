@@ -4,7 +4,8 @@ Environment variables를 통해 설정 관리
 """
 
 from pydantic_settings import BaseSettings
-from typing import List, Optional
+from pydantic import field_validator
+from typing import List, Optional, Union
 
 
 class Settings(BaseSettings):
@@ -55,8 +56,24 @@ class Settings(BaseSettings):
     POSTHOG_HOST: str = "https://app.posthog.com"
 
     # CORS
-    ALLOWED_ORIGINS: List[str] = ["http://localhost:3000", "http://localhost:8000"]
-    ALLOWED_METHODS: List[str] = ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"]
+    ALLOWED_ORIGINS: Union[List[str], str] = ["http://localhost:3000", "http://localhost:8000"]
+    ALLOWED_METHODS: Union[List[str], str] = ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"]
+
+    @field_validator("ALLOWED_ORIGINS", mode="before")
+    @classmethod
+    def parse_cors_origins(cls, v):
+        """쉼표로 구분된 문자열을 리스트로 변환"""
+        if isinstance(v, str):
+            return [origin.strip() for origin in v.split(",")]
+        return v
+
+    @field_validator("ALLOWED_METHODS", mode="before")
+    @classmethod
+    def parse_cors_methods(cls, v):
+        """쉼표로 구분된 문자열을 리스트로 변환"""
+        if isinstance(v, str):
+            return [method.strip() for method in v.split(",")]
+        return v
 
     # PDF Export
     PDF_POOL_SIZE: int = 2
